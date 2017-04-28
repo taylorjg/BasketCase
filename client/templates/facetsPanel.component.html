@@ -1,0 +1,19 @@
+<h4>Brands</h4>
+<ul class="facet-list">
+    <li ng-repeat="brand in vm.brands">
+        <a href="#">
+            <span class="facet-name">{{ brand.name }}</span>
+            <span class="facet-count">({{ brand.count }})</span>
+        </a>
+    </li>
+</ul>
+
+<h4>Colours</h4>
+<ul class="facet-list">
+    <li ng-repeat="colour in vm.colours">
+        <a href="#">
+            <span class="facet-name">{{ colour.name }}</span>
+            <span class="facet-count">({{ colour.count }})</span>
+        </a>
+    </li>
+</ul>
