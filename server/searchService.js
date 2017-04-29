@@ -7,37 +7,62 @@ const client = new es.Client({
     host: 'localhost:9200'
 });
 
-const getInitialFacets = (req, res) => {
+const addAggregations = request => {
+    request.body.aggs = {
+        'all_documents': {
+            global: {},
+            aggs: {
+                'fitType': {
+                    terms: {
+                        field: 'FitTypeName.keyword'
+                    }
+                },
+                'brand': {
+                    terms: {
+                        field: 'Brand.keyword'
+                    }
+                },
+                'colour': {
+                    terms: {
+                        field: 'Colour.keyword'
+                    }
+                },
+                'price': {
+                    "range": {
+                        "field": "Price",
+                        "ranges": [
+                            { "to": 200 },
+                            { "from": 200, "to": 250 },
+                            { "from": 250, "to": 300 },
+                            { "from": 300, "to": 350 },
+                            { "from": 350, "to": 400 },
+                            { "from": 400, "to": 450 },
+                            { "from": 450, "to": 500 },
+                            { "from": 500, "to": 550 },
+                            { "from": 550, "to": 600 },
+                            { "from": 600, "to": 650 },
+                            { "from": 650 }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+    return request;
+};
 
+const getInitialFacets = (req, res) => {
     const request = {
         index: 'products',
         type: 'washers',
         body: {
             query: {
                 match_all: {}
-            },
-            aggs: {
-                'all_documents': {
-                    global: {},
-                    aggs: {
-                        'brands': {
-                            terms: {
-                                field: 'Brand.keyword'
-                            }
-                        },
-                        'colours': {
-                            terms: {
-                                field: 'Colour.keyword'
-                            }
-                        }
-                    }
-                }
             }
         }
     };
-
-    client.search(request)
-        .then(response => sendJsonResponse(res, 200, response.aggregations))
+    client.search(addAggregations(request))
+        .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
 };
 

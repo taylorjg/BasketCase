@@ -1,11 +1,17 @@
 import app from './app.module';
+import * as C from './constants';
 
 class Controller {
-    constructor() {
+    constructor($rootScope) {
+        $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.onSearchResults.bind(this));
+    }
+
+    onSearchResults(_, data) {
+        this.results = data.hits.hits.map(hit => hit._source);
     }
 }
 
-Controller.$inject = [];
+Controller.$inject = ['$rootScope'];
 
 const resultsPanel = {
     selector: 'resultsPanel',

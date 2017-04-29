@@ -1,6 +1,16 @@
-<h4>Brands</h4>
+<h4>Fit Type</h4>
 <ul class="facet-list">
-    <li ng-repeat="brand in vm.brands">
+    <li ng-repeat="fitType in vm.fitType">
+        <a href="#">
+            <span class="facet-name">{{ fitType.name }}</span>
+            <span class="facet-count">({{ fitType.count }})</span>
+        </a>
+    </li>
+</ul>
+
+<h4>Brand</h4>
+<ul class="facet-list">
+    <li ng-repeat="brand in vm.brand">
         <a href="#">
             <span class="facet-name">{{ brand.name }}</span>
             <span class="facet-count">({{ brand.count }})</span>
@@ -8,12 +18,22 @@
     </li>
 </ul>
 
-<h4>Colours</h4>
+<h4>Colour</h4>
 <ul class="facet-list">
-    <li ng-repeat="colour in vm.colours">
+    <li ng-repeat="colour in vm.colour">
         <a href="#">
             <span class="facet-name">{{ colour.name }}</span>
             <span class="facet-count">({{ colour.count }})</span>
+        </a>
+    </li>
+</ul>
+
+<h4>Price</h4>
+<ul class="facet-list">
+    <li ng-repeat="price in vm.price">
+        <a href="#">
+            <span class="facet-name" ng-bind-html="price.name"></span>
+            <span class="facet-count">({{ price.count }})</span>
         </a>
     </li>
 </ul>
