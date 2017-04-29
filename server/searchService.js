@@ -3,9 +3,14 @@
 const express = require('express');
 const es = require('elasticsearch');
 
-const client = new es.Client({
-    host: 'localhost:9200'
-});
+const esConfig = () => {
+    const bonsai_url = process.env.BONSAI_URL;
+    return {
+        host: bonsai_url || 'localhost:9200'
+    };
+};
+
+const client = new es.Client(esConfig());
 
 const addAggregations = request => {
     request.body.aggs = {
