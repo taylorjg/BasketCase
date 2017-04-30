@@ -4,6 +4,10 @@ class Controller {
     constructor(SearchService) {
         this.SearchService = SearchService;
     }
+    onSearch(searchText) {
+        console.log(`[onSearch] searchText: ${searchText}`);
+        this.SearchService.search(searchText);
+    }
 }
 
 Controller.$inject = ['SearchService'];

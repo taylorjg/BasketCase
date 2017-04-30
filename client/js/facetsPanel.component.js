@@ -23,19 +23,19 @@ class Controller {
     }
 
     onSearchResults(_, data) {
-        this.fitType = data.aggregations.all_documents.fitType.buckets.map(bucket => ({
+        this.fitType = data.aggregations.fitType.buckets.map(bucket => ({
             name: bucket.key,
             count: bucket.doc_count
         }));
-        this.brand = data.aggregations.all_documents.brand.buckets.map(bucket => ({
+        this.brand = data.aggregations.brand.buckets.map(bucket => ({
             name: bucket.key,
             count: bucket.doc_count
         }));
-        this.colour = data.aggregations.all_documents.colour.buckets.map(bucket => ({
+        this.colour = data.aggregations.colour.buckets.map(bucket => ({
             name: bucket.key,
             count: bucket.doc_count
         }));
-        this.price = data.aggregations.all_documents.price.buckets.map(bucket => ({
+        this.price = data.aggregations.price.buckets.map(bucket => ({
             name: this.$sce.trustAsHtml(formatPriceRange(bucket)),
             count: bucket.doc_count
         }));

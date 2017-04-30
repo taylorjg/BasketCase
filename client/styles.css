@@ -20,5 +20,20 @@ body {
 }
 
 .results-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
 
+.results-list li {
+    margin-bottom: 20px;
+}
+
+.mainProdImage {
+    max-width: 200px;
+}
+
+.podTitle {
+    font-family: ozBold,Arial,Helvetica,sans-serif;
+    font-size: 16px;
 }

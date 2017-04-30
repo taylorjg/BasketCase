@@ -7,9 +7,10 @@ class SearchService {
         this.$rootScope = $rootScope;
     }
 
-    getInitialFacets() {
-        const url = `${C.SEARCH_SERVICE_URL}/initialFacets`;
-        return this.$http.get(url)
+    search(searchText) {
+        const url = `${C.SEARCH_SERVICE_URL}/search`;
+        const data = searchText ? { searchText } : {};
+        return this.$http.post(url, data)
             .then(response => this.$rootScope.$broadcast(C.SEARCH_RESULTS_EVENT, response.data));
     }
 }
