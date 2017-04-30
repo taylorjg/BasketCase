@@ -6,7 +6,7 @@ class Controller {
     }
     onSearch(searchText) {
         console.log(`[onSearch] searchText: ${searchText}`);
-        this.SearchService.search(searchText);
+        this.SearchService.search({ searchText });
     }
 }
 

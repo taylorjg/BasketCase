@@ -7,9 +7,9 @@ class SearchService {
         this.$rootScope = $rootScope;
     }
 
-    search(searchText) {
+    search(searchOptions) {
         const url = `${C.SEARCH_SERVICE_URL}/search`;
-        const data = searchText ? { searchText } : {};
+        const data = searchOptions || {};
         return this.$http.post(url, data)
             .then(response => this.$rootScope.$broadcast(C.SEARCH_RESULTS_EVENT, response.data));
     }

@@ -11,10 +11,7 @@
 <h4>Brand</h4>
 <ul class="facet-list">
     <li ng-repeat="brand in vm.brand">
-        <a href="#">
-            <span class="facet-name">{{ brand.name }}</span>
-            <span class="facet-count">({{ brand.count }})</span>
-        </a>
+        <facet facet="brand" field="'Brand.keyword'"></facet>
     </li>
 </ul>
 

@@ -52,15 +52,36 @@ const addAggregations = request => {
 };
 
 const search = (req, res) => {
+    console.log(`req.body: ${JSON.stringify(req.body)}`);
     const searchText = req.body.searchText;
+    const filter = req.body.filter;
     const request = {
         index: 'products',
         type: 'washers',
-        body: {}
+        body: {
+            query: {
+                match_all: {}
+            }
+        }
     };
-    request.body.query = searchText
-        ? { query_string: { query: searchText} }
-        : { match_all: {} };
+    if (searchText) {
+        request.body.query = {
+            query_string: {
+                query: searchText
+            }
+        };
+    }
+    if (filter) {
+        request.body.query = {
+            bool: {
+                filter: {
+                    term: {
+                        [filter.field]: filter.value
+                    }
+                }
+            }
+        };
+    }
     client.search(addAggregations(request))
         .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
