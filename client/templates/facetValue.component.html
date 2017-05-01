@@ -1,0 +1,11 @@
+<div>
+    <input
+        type="checkbox"
+        id="{{ vm.value.name }}"
+        name="{{ vm.value.name }}"
+        value="{{ vm.value.name }}"
+        ng-model="vm.selected"
+        ng-change="vm.onChange({value: vm.value, selected: vm.selected})"
+    >
+    <label for="{{ vm.value.name }}">{{ vm.value.name }} ({{ vm.value.count }})</label>
+</div>

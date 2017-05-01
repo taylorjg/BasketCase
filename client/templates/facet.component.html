@@ -1,4 +1,6 @@
-<a ng-click="vm.onClick(vm.field, vm.facet.name)">
-    <span class="facet-name">{{ vm.facet.name }}</span>
-    <span class="facet-count">({{ vm.facet.count }})</span>
-</a>
+<h4>{{ vm.label }}</h4>
+<ul class="facet-list">
+    <li ng-repeat="facetValue in vm.facetValues">
+        <facet-value value="facetValue" on-change="vm.onChange(value, selected)"></facet-value>
+    </li>
+</ul>

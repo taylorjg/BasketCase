@@ -8,6 +8,7 @@ class Controller {
 
     onSearchResults(_, data) {
         this.results = data.hits.hits.map(hit => hit._source);
+        this.total = data.hits.total;
     }
 }
 

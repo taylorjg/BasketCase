@@ -9,6 +9,18 @@ body {
 
 .facet-list {
     list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.facet-list label {
+    margin: 0;
+    font-weight: normal;
+    color: #337ab7;
+}
+
+.facet-list li {
+    margin: 0 0 0 5px;
 }
 
 .facet-name {

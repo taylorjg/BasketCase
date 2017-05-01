@@ -8,12 +8,13 @@
     </li>
 </ul>
 
-<h4>Brand</h4>
+<!--<h4>Brand</h4>
 <ul class="facet-list">
     <li ng-repeat="brand in vm.brand">
-        <facet facet="brand" field="'Brand.keyword'"></facet>
+        <facet-value facet="brand" field="'Brand.keyword'"></facet-value>
     </li>
-</ul>
+</ul>-->
+<facet label="'Brand'" field="'Brand.keyword'" facet-values="vm.brand"></facet>
 
 <h4>Colour</h4>
 <ul class="facet-list">

@@ -3,13 +3,19 @@ import app from './app.module';
 class Controller {
     constructor(SearchService) {
         this.SearchService = SearchService;
+        this.selectedValues = [];
     }
-    onClick(field, value) {
-        console.log(`[onClick] field: ${field}; value: ${value}`);
+    onChange(value, selected) {
+        console.log(`[facet onChange] value.name: ${value.name}; selected: ${selected}`);
+        if (selected) {
+            this.selectedValues.push(value.name);
+        } else {
+            this.selectedValues = this.selectedValues.filter(v => v !== value.name);
+        }
         this.SearchService.search({
             filter: {
-                field,
-                value
+                field: this.field,
+                values: this.selectedValues
             }
         });
     }
@@ -21,8 +27,9 @@ const facet = {
     selector: 'facet',
     templateUrl: 'templates/facet.component.html',
     bindings: {
-        facet: '<',
-        field: '<'
+        label: '<',
+        field: '<',
+        facetValues: '<'
     },
     controller: Controller,
     controllerAs: 'vm'
