@@ -12,47 +12,54 @@ const esConfig = () => {
 
 const client = new es.Client(esConfig());
 
+const aggs = {
+    'fitType': {
+        terms: {
+            field: 'FitTypeName.keyword'
+        }
+    },
+    'brand': {
+        terms: {
+            field: 'Brand.keyword'
+        }
+    },
+    'colour': {
+        terms: {
+            field: 'Colour.keyword'
+        }
+    },
+    'price': {
+        "range": {
+            "field": "Price",
+            "ranges": [
+                { "to": 200 },
+                { "from": 200, "to": 250 },
+                { "from": 250, "to": 300 },
+                { "from": 300, "to": 350 },
+                { "from": 350, "to": 400 },
+                { "from": 400, "to": 450 },
+                { "from": 450, "to": 500 },
+                { "from": 500, "to": 550 },
+                { "from": 550, "to": 600 },
+                { "from": 600, "to": 650 },
+                { "from": 650 }
+            ]
+        }
+    }
+};
+
 const addGlobalAggregations = request => {
     request.body.aggs = {
-        'all_documents': {
+        'global': {
             global: {},
-            aggs: {
-                'fitType': {
-                    terms: {
-                        field: 'FitTypeName.keyword'
-                    }
-                },
-                'brand': {
-                    terms: {
-                        field: 'Brand.keyword'
-                    }
-                },
-                'colour': {
-                    terms: {
-                        field: 'Colour.keyword'
-                    }
-                },
-                'price': {
-                    "range": {
-                        "field": "Price",
-                        "ranges": [
-                            { "to": 200 },
-                            { "from": 200, "to": 250 },
-                            { "from": 250, "to": 300 },
-                            { "from": 300, "to": 350 },
-                            { "from": 350, "to": 400 },
-                            { "from": 400, "to": 450 },
-                            { "from": 450, "to": 500 },
-                            { "from": 500, "to": 550 },
-                            { "from": 550, "to": 600 },
-                            { "from": 600, "to": 650 },
-                            { "from": 650 }
-                        ]
-                    }
-                }
-            }
+            aggs
         }
     };
+    return request;
+};
+
+const addQueryAggregations = request => {
+    request.body.aggs = aggs;
     return request;
 };
 
@@ -93,7 +100,7 @@ const search = (req, res) => {
             }
         };
     }
-    client.search(request)
+    client.search(addQueryAggregations(request))
         .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
 };
