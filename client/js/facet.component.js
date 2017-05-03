@@ -7,7 +7,7 @@ class Controller {
     }
     onChange(value) {
         if (value.selected) {
-            if (value.isRange) {
+            if (this.isRange) {
                 this.selectedValues.forEach(v => v.selected = false);
                 this.selectedValues = [value];
             } else {
@@ -16,7 +16,7 @@ class Controller {
         } else {
             this.selectedValues = this.selectedValues.filter(v => v !== value);
         }
-        const searchOptions = value.isRange
+        const searchOptions = this.isRange
             ? this.rangeFilter(this.field, value)
             : this.termFilter(this.field, this.selectedValues);
         this.SearchService.search(searchOptions);
@@ -52,7 +52,8 @@ const facet = {
     bindings: {
         label: '<',
         field: '<',
-        values: '<'
+        values: '<',
+        isRange: '<'
     },
     controller: Controller,
     controllerAs: 'vm'

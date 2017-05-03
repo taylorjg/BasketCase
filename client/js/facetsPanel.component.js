@@ -28,23 +28,19 @@ class Controller {
     onFacetsResults(_, data) {
         this.fitType = data.aggregations.all_documents.fitType.buckets.map(bucket => ({
             bucket,
-            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count),
-            isRange: false
+            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
         }));
         this.brand = data.aggregations.all_documents.brand.buckets.map(bucket => ({
             bucket,
-            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count),
-            isRange: false
+            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
         }));
         this.colour = data.aggregations.all_documents.colour.buckets.map(bucket => ({
             bucket,
-            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count),
-            isRange: false
+            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
         }));
         this.price = data.aggregations.all_documents.price.buckets.map(bucket => ({
             bucket,
-            displayName: formatDisplayName(this.$sce, formatPriceKey(bucket), bucket.doc_count),
-            isRange: true
+            displayName: formatDisplayName(this.$sce, formatPriceKey(bucket), bucket.doc_count)
         }));
     }
 }
