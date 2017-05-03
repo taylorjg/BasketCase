@@ -5,6 +5,14 @@ class Controller {
         this.SearchService = SearchService;
         this.selectedValues = [];
     }
+
+    $onChanges() {
+        if (this.values) {
+            this.selectedValues = this.values.filter(v1 => this.selectedValues.find(v2 => v1.bucket.key === v2.bucket.key));
+            this.selectedValues.forEach(v => v.selected = true);
+        }
+    }
+
     onChange(value) {
         if (value.selected) {
             if (this.isRange) {

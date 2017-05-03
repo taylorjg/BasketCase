@@ -3,9 +3,9 @@ import app from './app.module';
 class Controller {
     constructor() {
     }
-    $onInit() {
-        this.value.selected = false;
-    }
+    // $onInit() {
+    //     this.value.selected = false;
+    // }
 }
 
 Controller.$inject = [];
