@@ -1,37 +1,13 @@
-<h4>Fit Type</h4>
-<ul class="facet-list">
-    <li ng-repeat="fitType in vm.fitType">
-        <a href="#">
-            <span class="facet-name">{{ fitType.name }}</span>
-            <span class="facet-count">({{ fitType.count }})</span>
-        </a>
-    </li>
-</ul>
-
-<!--<h4>Brand</h4>
-<ul class="facet-list">
-    <li ng-repeat="brand in vm.brand">
-        <facet-value facet="brand" field="'Brand.keyword'"></facet-value>
-    </li>
-</ul>-->
+<facet label="'Fit Type'" field="'FitTypeName.keyword'" facet-values="vm.fitType"></facet>
 <facet label="'Brand'" field="'Brand.keyword'" facet-values="vm.brand"></facet>
-
-<h4>Colour</h4>
-<ul class="facet-list">
-    <li ng-repeat="colour in vm.colour">
-        <a href="#">
-            <span class="facet-name">{{ colour.name }}</span>
-            <span class="facet-count">({{ colour.count }})</span>
-        </a>
-    </li>
-</ul>
+<facet label="'Colour'" field="'Colour.keyword'" facet-values="vm.colour"></facet>
 
 <h4>Price</h4>
 <ul class="facet-list">
     <li ng-repeat="price in vm.price">
         <a href="#">
-            <span class="facet-name" ng-bind-html="price.name"></span>
-            <span class="facet-count">({{ price.count }})</span>
+            <span ng-bind-html="price.name"></span>
+            <span>({{ price.count }})</span>
         </a>
     </li>
 </ul>

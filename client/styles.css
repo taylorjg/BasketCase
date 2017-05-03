@@ -23,12 +23,9 @@ body {
     margin: 0 0 0 5px;
 }
 
-.facet-name {
-
-}
-
-.facet-count {
-
+.results-count {
+    text-align: center;
+    font-style: italic;
 }
 
 .results-list {
@@ -46,6 +43,6 @@ body {
 }
 
 .podTitle {
-    font-family: ozBold,Arial,Helvetica,sans-serif;
+    font-family: Arial,Helvetica,sans-serif;
     font-size: 16px;
 }
