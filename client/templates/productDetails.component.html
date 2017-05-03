@@ -1,15 +1,18 @@
-<ul>
-    <div class="productInfoArea">
-        <div class="podLeftContent">
-            <img class="mainProdImage" ng-src="{{ vm.product.Image }}">
-            <span class="energyRating">{{ vm.product.EnergyRating }}</span>
-        </div>
-        <div class="podCentreContent">
-            <span class="brandLogo" ng-style="vm.background"></span>
-            <h2 class="podTitle">{{ vm.product.FullTitle }}</h2>
-        </div>
-        <div class="podRightContent">
-            <span class="price">&pound;{{ vm.product.Price }}</span>
-        </div>
+<div class="productInfoArea">
+    <div class="podLeftContent">
+        <img class="mainProdImage" ng-src="{{ vm.product.Image }}">
+        <!--<div class="energyEfficiencyCard hasEnergyRatingLabel">
+            <div class="energyRating">
+                <div class="energyEfficiencySmall">{{ vm.product.EnergyRating }}</div>
+                <div class="energyTriangle"></div>
+            </div>
+        </div>-->
     </div>
-</ul>
+    <div class="podCentreContent">
+        <span class="brandLogo" ng-style="vm.background"></span>
+        <h2 class="podTitle">{{ vm.product.FullTitle }}</h2>
+    </div>
+    <div class="podRightContent">
+        <span class="price">&pound;{{ vm.product.Price }}</span>
+    </div>
+</div>
