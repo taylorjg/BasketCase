@@ -2,14 +2,14 @@
     <div class="productInfoArea">
         <div class="podLeftContent">
             <img class="mainProdImage" ng-src="{{ vm.product.Image }}">
-            <span>{{ vm.product.EnergyRating }}</span>
+            <span class="energyRating">{{ vm.product.EnergyRating }}</span>
         </div>
         <div class="podCentreContent">
-            <!-- TODO: brand logo -->
+            <span class="brandLogo" ng-style="vm.background"></span>
             <h2 class="podTitle">{{ vm.product.FullTitle }}</h2>
         </div>
         <div class="podRightContent">
-            <span>&pound;{{ vm.product.Price }}</span>
+            <span class="price">&pound;{{ vm.product.Price }}</span>
         </div>
     </div>
 </ul>

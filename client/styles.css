@@ -38,11 +38,68 @@ body {
     margin-bottom: 20px;
 }
 
+.productInfoArea {
+    width: 768px;
+    height: auto;
+    overflow: hidden;
+    margin: 35px 0 0;
+    position: relative;
+}
+
+.podLeftContent {
+    float: left;
+    width: 200px;
+    height: 100%;
+    position: relative;
+}
+
 .mainProdImage {
+    margin: 8px auto 0 auto;
+    padding: 0;
     max-width: 200px;
 }
 
+.energyRating {
+    width: 40px;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.podCentreContent {
+    float: left;
+    width: 371px;
+    height: 100%;
+    position: relative;
+}
+
+.podRightContent {
+    float: right;
+    width: 168px;
+    height: 100%;
+    position: relative;
+}
+
+.brandLogo {
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 0;
+    font-size: 13px;
+    font-weight: bold;
+    width: 100px;
+    min-height: 40px !important;
+}
+
 .podTitle {
+    margin-top: 0;
     font-family: Arial,Helvetica,sans-serif;
     font-size: 16px;
+}
+
+.price {
+    font-size: 1.3125rem;
+    font-weight: bold;
+    text-align: right;
+    margin-bottom: 5px;
 }
