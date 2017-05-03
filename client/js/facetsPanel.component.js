@@ -1,7 +1,7 @@
 import app from './app.module';
 import * as C from './constants';
 
-const formatPriceRange = bucket => {
+const formatPriceKey = bucket => {
     const gotFrom = Number.isInteger(bucket.from);
     const gotTo = Number.isInteger(bucket.to);
     if (gotFrom && gotTo) {
@@ -16,6 +16,8 @@ const formatPriceRange = bucket => {
     return bucket.key;
 };
 
+const formatDisplayName = ($sce, name, count) => $sce.trustAsHtml(`${name} (${count})`);
+
 class Controller {
     constructor($rootScope, $sce, SearchService) {
         SearchService.facets();
@@ -26,22 +28,22 @@ class Controller {
     onFacetsResults(_, data) {
         this.fitType = data.aggregations.all_documents.fitType.buckets.map(bucket => ({
             bucket,
-            displayName: this.$sce.trustAsHtml(bucket.key),
+            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count),
             isRange: false
         }));
         this.brand = data.aggregations.all_documents.brand.buckets.map(bucket => ({
             bucket,
-            displayName: this.$sce.trustAsHtml(bucket.key),
+            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count),
             isRange: false
         }));
         this.colour = data.aggregations.all_documents.colour.buckets.map(bucket => ({
             bucket,
-            displayName: this.$sce.trustAsHtml(bucket.key),
+            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count),
             isRange: false
         }));
         this.price = data.aggregations.all_documents.price.buckets.map(bucket => ({
             bucket,
-            displayName: this.$sce.trustAsHtml(formatPriceRange(bucket)),
+            displayName: formatDisplayName(this.$sce, formatPriceKey(bucket), bucket.doc_count),
             isRange: true
         }));
     }
