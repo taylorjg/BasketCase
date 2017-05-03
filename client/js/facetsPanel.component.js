@@ -25,20 +25,24 @@ class Controller {
 
     onFacetsResults(_, data) {
         this.fitType = data.aggregations.all_documents.fitType.buckets.map(bucket => ({
-            name: bucket.key,
-            count: bucket.doc_count
+            bucket,
+            displayName: this.$sce.trustAsHtml(bucket.key),
+            isRange: false
         }));
         this.brand = data.aggregations.all_documents.brand.buckets.map(bucket => ({
-            name: bucket.key,
-            count: bucket.doc_count
+            bucket,
+            displayName: this.$sce.trustAsHtml(bucket.key),
+            isRange: false
         }));
         this.colour = data.aggregations.all_documents.colour.buckets.map(bucket => ({
-            name: bucket.key,
-            count: bucket.doc_count
+            bucket,
+            displayName: this.$sce.trustAsHtml(bucket.key),
+            isRange: false
         }));
         this.price = data.aggregations.all_documents.price.buckets.map(bucket => ({
-            name: this.$sce.trustAsHtml(formatPriceRange(bucket)),
-            count: bucket.doc_count
+            bucket,
+            displayName: this.$sce.trustAsHtml(formatPriceRange(bucket)),
+            isRange: true
         }));
     }
 }

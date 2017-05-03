@@ -1,13 +1,4 @@
-<facet label="'Fit Type'" field="'FitTypeName.keyword'" facet-values="vm.fitType"></facet>
-<facet label="'Brand'" field="'Brand.keyword'" facet-values="vm.brand"></facet>
-<facet label="'Colour'" field="'Colour.keyword'" facet-values="vm.colour"></facet>
-
-<h4>Price</h4>
-<ul class="facet-list">
-    <li ng-repeat="price in vm.price">
-        <a href="#">
-            <span ng-bind-html="price.name"></span>
-            <span>({{ price.count }})</span>
-        </a>
-    </li>
-</ul>
+<facet label="'Fit Type'" field="'FitTypeName.keyword'" values="vm.fitType"></facet>
+<facet label="'Brand'" field="'Brand.keyword'" values="vm.brand"></facet>
+<facet label="'Colour'" field="'Colour.keyword'" values="vm.colour"></facet>
+<facet label="'Price'" field="'Price'" values="vm.price"></facet>

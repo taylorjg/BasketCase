@@ -1,11 +1,12 @@
 <div>
     <input
         type="checkbox"
-        id="{{ vm.value.name }}"
-        name="{{ vm.value.name }}"
-        value="{{ vm.value.name }}"
-        ng-model="vm.selected"
-        ng-change="vm.onChange({value: vm.value, selected: vm.selected})"
+        id="{{ vm.value.bucket.key }}"
+        ng-model="vm.value.selected"
+        ng-change="vm.onChange({value: vm.value})"
     >
-    <label for="{{ vm.value.name }}">{{ vm.value.name }} ({{ vm.value.count }})</label>
+    <label for="{{ vm.value.bucket.key }}">
+        <span ng-bind-html="vm.value.displayName"></span>
+        <span>({{ vm.value.bucket.doc_count }})</span>
+    </label>
 </div>

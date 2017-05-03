@@ -5,19 +5,42 @@ class Controller {
         this.SearchService = SearchService;
         this.selectedValues = [];
     }
-    onChange(value, selected) {
-        console.log(`[facet onChange] value.name: ${value.name}; selected: ${selected}`);
-        if (selected) {
-            this.selectedValues.push(value.name);
-        } else {
-            this.selectedValues = this.selectedValues.filter(v => v !== value.name);
-        }
-        this.SearchService.search({
-            filter: {
-                field: this.field,
-                values: this.selectedValues
+    onChange(value) {
+        if (value.selected) {
+            if (value.isRange) {
+                this.selectedValues.forEach(v => v.selected = false);
+                this.selectedValues = [value];
+            } else {
+                this.selectedValues.push(value);
             }
-        });
+        } else {
+            this.selectedValues = this.selectedValues.filter(v => v !== value);
+        }
+        const searchOptions = value.isRange
+            ? this.rangeFilter(this.field, value)
+            : this.termFilter(this.field, this.selectedValues);
+        this.SearchService.search(searchOptions);
+    }
+    termFilter(field, selectedValues) {
+        return {
+            filter: {
+                field,
+                values: selectedValues.map(v => v.bucket.key)
+            }
+        };
+    }
+    rangeFilter(field, value) {
+        return value.selected
+            ? {
+                filter: {
+                    field,
+                    range: {
+                        from: value.bucket.from,
+                        to: value.bucket.to
+                    }
+                }
+            }
+            : null;
     }
 }
 
@@ -29,7 +52,7 @@ const facet = {
     bindings: {
         label: '<',
         field: '<',
-        facetValues: '<'
+        values: '<'
     },
     controller: Controller,
     controllerAs: 'vm'

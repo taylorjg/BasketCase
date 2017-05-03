@@ -1,6 +1,6 @@
 <h4>{{ vm.label }}</h4>
 <ul class="facet-list">
-    <li ng-repeat="facetValue in vm.facetValues">
-        <facet-value value="facetValue" on-change="vm.onChange(value, selected)"></facet-value>
+    <li ng-repeat="value in vm.values">
+        <facet-value field="vm.field" value="value" on-change="vm.onChange(value)"></facet-value>
     </li>
 </ul>

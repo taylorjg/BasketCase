@@ -2,7 +2,9 @@ import app from './app.module';
 
 class Controller {
     constructor() {
-        this.selected = false;
+    }
+    $onInit() {
+        this.value.selected = false;
     }
 }
 
@@ -12,6 +14,7 @@ const facetValue = {
     selector: 'facetValue',
     templateUrl: 'templates/facetValue.component.html',
     bindings: {
+        field: '<',
         value: '<',
         onChange: '&'
     },

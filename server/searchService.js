@@ -86,12 +86,26 @@ const search = (req, res) => {
             }
         };
     }
-    if (filter && filter.values.length) {
+    if (filter && filter.values && filter.values.length) {
         request.body.query = {
             bool: {
                 filter: {
                     terms: {
                         [filter.field]: filter.values
+                    }
+                }
+            }
+        };
+    }
+    if (filter && filter.range) {
+        request.body.query = {
+            bool: {
+                filter: {
+                    range: {
+                        [filter.field]: {
+                            gte: filter.range.from,
+                            lt: filter.range.to
+                        }
                     }
                 }
             }
