@@ -16,27 +16,27 @@ class Controller {
         } else {
             this.selectedValues = this.selectedValues.filter(v => v !== value);
         }
-        const searchOptions = this.isRange
+        const filter = this.isRange
             ? this.rangeFilter(this.field, value)
-            : this.termFilter(this.field, this.selectedValues);
-        this.SearchService.search(searchOptions);
+            : this.termsFilter(this.field, this.selectedValues);
+        this.onFacetSelectionChanged({ field: this.field, filter });
     }
-    termFilter(field, selectedValues) {
-        return {
-            filter: {
-                field,
-                values: selectedValues.map(v => v.bucket.key)
+    termsFilter(field, selectedValues) {
+        return selectedValues.length
+            ? {
+                terms: {
+                    [field]: selectedValues.map(v => v.bucket.key)
+                }
             }
-        };
+            : null;
     }
     rangeFilter(field, value) {
         return value.selected
             ? {
-                filter: {
-                    field,
-                    range: {
-                        from: value.bucket.from,
-                        to: value.bucket.to
+                range: {
+                    [field]: {
+                        gte: value.bucket.from,
+                        lt: value.bucket.to
                     }
                 }
             }
@@ -53,7 +53,8 @@ const facet = {
         label: '<',
         field: '<',
         values: '<',
-        isRange: '<'
+        isRange: '<',
+        onFacetSelectionChanged: '&'
     },
     controller: Controller,
     controllerAs: 'vm'

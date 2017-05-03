@@ -1,4 +1,35 @@
-<facet label="'Fit Type'" field="'FitTypeName.keyword'" values="vm.fitType" is-range="false"></facet>
-<facet label="'Brand'" field="'Brand.keyword'" values="vm.brand" is-range="false"></facet>
-<facet label="'Colour'" field="'Colour.keyword'" values="vm.colour" is-range="false"></facet>
-<facet label="'Price'" field="'Price'" values="vm.price" is-range="true"></facet>
+<facet
+    label="'Fit Type'"
+    field="'FitTypeName.keyword'"
+    values="vm.fitType"
+    is-range="false"
+    on-facet-selection-changed="vm.onFacetSelectionChanged(field, filter)"
+>
+</facet>
+
+<facet
+    label="'Brand'"
+    field="'Brand.keyword'"
+    values="vm.brand"
+    is-range="false"
+    on-facet-selection-changed="vm.onFacetSelectionChanged(field, filter)"
+>
+</facet>
+
+<facet
+    label="'Colour'"
+    field="'Colour.keyword'"
+    values="vm.colour"
+    is-range="false"
+    on-facet-selection-changed="vm.onFacetSelectionChanged(field, filter)"
+>
+</facet>
+
+<facet
+    label="'Price'"
+    field="'Price'"
+    values="vm.price"
+    is-range="true"
+    on-facet-selection-changed="vm.onFacetSelectionChanged(field, filter)"
+>
+</facet>

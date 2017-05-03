@@ -20,12 +20,15 @@ const formatDisplayName = ($sce, name, count) => $sce.trustAsHtml(`${name} (${co
 
 class Controller {
     constructor($rootScope, $sce, SearchService) {
-        SearchService.facets();
         this.$sce = $sce;
-        $rootScope.$on(C.FACETS_RESULTS_EVENT, this.onFacetsResults.bind(this));
+        this.SearchService = SearchService;
+        this.filters = new Map();
+        $rootScope.$on(C.FACETS_RESULTS_EVENT, this.updateFacets.bind(this));
+        $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.updateFacets.bind(this));
+        SearchService.facets();
     }
 
-    onFacetsResults(_, data) {
+    updateFacets(_, data) {
         this.fitType = data.aggregations.all_documents.fitType.buckets.map(bucket => ({
             bucket,
             displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
@@ -42,6 +45,21 @@ class Controller {
             bucket,
             displayName: formatDisplayName(this.$sce, formatPriceKey(bucket), bucket.doc_count)
         }));
+    }
+
+    onFacetSelectionChanged(field, filter) {
+        if (filter) {
+            this.filters.set(field, filter);
+        } else {
+            this.filters.delete(field);
+        }
+        this.search();
+    }
+
+    search() {
+        const filters = Array.from(this.filters.values());
+        const searchOptions = { filters };
+        this.SearchService.search(searchOptions);
     }
 }
 

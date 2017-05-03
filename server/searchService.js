@@ -69,7 +69,7 @@ const facets = (req, res) => {
 
 const search = (req, res) => {
     const searchText = req.body.searchText;
-    const filter = req.body.filter;
+    const filters = req.body.filters;
     const request = {
         index: 'products',
         type: 'washers',
@@ -86,28 +86,10 @@ const search = (req, res) => {
             }
         };
     }
-    if (filter && filter.values && filter.values.length) {
+    if (filters) {
         request.body.query = {
             bool: {
-                filter: {
-                    terms: {
-                        [filter.field]: filter.values
-                    }
-                }
-            }
-        };
-    }
-    if (filter && filter.range) {
-        request.body.query = {
-            bool: {
-                filter: {
-                    range: {
-                        [filter.field]: {
-                            gte: filter.range.from,
-                            lt: filter.range.to
-                        }
-                    }
-                }
+                filter: filters
             }
         };
     }
