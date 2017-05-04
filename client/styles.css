@@ -8,6 +8,19 @@ body {
     height: 57px;
 }
 
+.facet-label {
+    display: inline;
+    line-height: 30px;
+    vertical-align: middle;
+}
+
+.facet-reset {
+    float: right;
+    line-height: 30px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
 .facet-list {
     list-style: none;
     margin: 0;

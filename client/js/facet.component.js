@@ -7,8 +7,10 @@ class Controller {
     }
 
     $onChanges() {
+        const valueWasPreviouslySelected = newValue => 
+            this.selectedValues.find(oldValue => newValue.bucket.key === oldValue.bucket.key);
         if (this.values) {
-            this.selectedValues = this.values.filter(v1 => this.selectedValues.find(v2 => v1.bucket.key === v2.bucket.key));
+            this.selectedValues = this.values.filter(valueWasPreviouslySelected);
             this.selectedValues.forEach(v => v.selected = true);
         }
     }
@@ -29,6 +31,13 @@ class Controller {
             : this.termsFilter(this.field, this.selectedValues);
         this.onFacetSelectionChanged({ field: this.field, filter });
     }
+
+    onReset() {
+        this.selectedValues.forEach(v => v.selected = false);
+        this.selectedValues = [];
+        this.onFacetSelectionChanged({ field: this.field, filter: null });
+    }
+
     termsFilter(field, selectedValues) {
         return selectedValues.length
             ? {
@@ -38,6 +47,7 @@ class Controller {
             }
             : null;
     }
+
     rangeFilter(field, value) {
         return value.selected
             ? {
