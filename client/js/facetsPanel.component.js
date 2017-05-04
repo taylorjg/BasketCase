@@ -36,7 +36,7 @@ class Controller {
             bucket,
             displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
         }));
-        this.colour =data.aggregations.global.colour.colour.buckets.map(bucket => ({
+        this.colour = data.aggregations.global.colour.colour.buckets.map(bucket => ({
             bucket,
             displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
         }));
