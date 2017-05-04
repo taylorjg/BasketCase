@@ -12,109 +12,47 @@ const esConfig = () => {
 
 const client = new es.Client(esConfig());
 
-const notBrandFilter = f => {
-    if (f.terms && f.terms['Brand.keyword']) return false;
+const outTermFilterFor = field => f => {
+    if (f.terms && f.terms[field]) return false;
     return true;
 };
 
-const notColourFilter = f => {
-    if (f.terms && f.terms['Colour.keyword']) return false;
+const outRangeFilterFor = field => f => {
+    if (f.range && f.range[field]) return false;
     return true;
 };
 
-const notFitTypeFilter = f => {
-    if (f.terms && f.terms['FitTypeName.keyword']) return false;
-    return true;
-};
-
-const notPriceFilter = f => {
-    if (f.range && f.range['Price']) return false;
-    return true;
-};
-
-const addFitTypeAggregation = (aggs, filters) => {
-    const otherFilters = filters.filter(notFitTypeFilter);
-    const name = 'fitType';
+const addTermAggregation = (aggs, activeFilters, name, field) => {
+    const otherActiveFilters = activeFilters.filter(outTermFilterFor(field));
     aggs[name] = {
         filter: {
             bool: {
-                filter: otherFilters
+                filter: otherActiveFilters
             }
         },
         aggs: {
             [name]: {
                 terms: {
-                    field: "FitTypeName.keyword"
+                    field
                 }
             }
         }
     };
 };
 
-const addBrandAggregation = (aggs, filters) => {
-    const otherFilters = filters.filter(notBrandFilter);
-    const name = 'brand';
+const addRangeAggregation = (aggs, activeFilters, name, field, ranges) => {
+    const otherActiveFilters = activeFilters.filter(outRangeFilterFor(field));
     aggs[name] = {
         filter: {
             bool: {
-                filter: otherFilters
-            }
-        },
-        aggs: {
-            [name]: {
-                terms: {
-                    field: "Brand.keyword"
-                }
-            }
-        }
-    };
-};
-
-const addColourAggregation = (aggs, filters) => {
-    const otherFilters = filters.filter(notColourFilter);
-    const name = 'colour';
-    aggs[name] = {
-        filter: {
-            bool: {
-                filter: otherFilters
-            }
-        },
-        aggs: {
-            [name]: {
-                terms: {
-                    field: "Colour.keyword"
-                }
-            }
-        }
-    };
-};
-
-const addPriceAggregation = (aggs, filters) => {
-    const otherFilters = filters.filter(notPriceFilter);
-    const name = 'price';
-    aggs[name] = {
-        filter: {
-            bool: {
-                filter: otherFilters
+                filter: otherActiveFilters
             }
         },
         aggs: {
             [name]: {
                 range: {
-                    field: 'Price',
-                    ranges: [
-                        { 'to': 200 },
-                        { 'from': 200, 'to': 250 },
-                        { 'from': 250, 'to': 300 },
-                        { 'from': 300, 'to': 350 },
-                        { 'from': 350, 'to': 400 },
-                        { 'from': 400, 'to': 450 },
-                        { 'from': 450, 'to': 500 },
-                        { 'from': 500, 'to': 550 },
-                        { 'from': 550, 'to': 600 },
-                        { 'from': 600, 'to': 650 },
-                        { 'from': 650 }
-                    ]
+                    field,
+                    ranges
                 }
             }
         }
@@ -129,10 +67,22 @@ const addAggregations = (request, filters) => {
         }
     };
     const aggs = request.body.aggs.global.aggs;
-    addFitTypeAggregation(aggs, filters);
-    addBrandAggregation(aggs, filters);
-    addColourAggregation(aggs, filters);
-    addPriceAggregation(aggs, filters);
+    addTermAggregation(aggs, filters, 'fitType', 'FitTypeName.keyword');
+    addTermAggregation(aggs, filters, 'brand', 'Brand.keyword');
+    addTermAggregation(aggs, filters, 'colour', 'Colour.keyword');
+    addRangeAggregation(aggs, filters, 'price', 'Price', [
+        { 'to': 200 },
+        { 'from': 200, 'to': 250 },
+        { 'from': 250, 'to': 300 },
+        { 'from': 300, 'to': 350 },
+        { 'from': 350, 'to': 400 },
+        { 'from': 400, 'to': 450 },
+        { 'from': 450, 'to': 500 },
+        { 'from': 500, 'to': 550 },
+        { 'from': 550, 'to': 600 },
+        { 'from': 600, 'to': 650 },
+        { 'from': 650 }
+    ]);
     return request;
 };
 
