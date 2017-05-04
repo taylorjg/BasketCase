@@ -1,20 +1,20 @@
 import app from './app.module';
 import * as C from './constants';
 
-// const formatPriceKey = bucket => {
-//     const gotFrom = Number.isInteger(bucket.from);
-//     const gotTo = Number.isInteger(bucket.to);
-//     if (gotFrom && gotTo) {
-//         return `&pound;${bucket.from} - &pound;${bucket.to}`;
-//     }
-//     if (gotFrom) {
-//         return `&pound;${bucket.from} or more`;
-//     }
-//     if (gotTo) {
-//         return `&pound;${bucket.to} or less`;
-//     }
-//     return bucket.key;
-// };
+const formatPriceKey = bucket => {
+    const gotFrom = Number.isInteger(bucket.from);
+    const gotTo = Number.isInteger(bucket.to);
+    if (gotFrom && gotTo) {
+        return `&pound;${bucket.from} - &pound;${bucket.to}`;
+    }
+    if (gotFrom) {
+        return `&pound;${bucket.from} or more`;
+    }
+    if (gotTo) {
+        return `&pound;${bucket.to} or less`;
+    }
+    return bucket.key;
+};
 
 const formatDisplayName = ($sce, name, count) => $sce.trustAsHtml(`${name} (${count})`);
 
@@ -41,11 +41,10 @@ class Controller {
             bucket,
             displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
         }));
-        // this.price = data.aggregations.global.price.price.buckets.filter(bucket => bucket.doc_count > 0).map(bucket => ({
-        //     bucket,
-        //     displayName: formatDisplayName(this.$sce, formatPriceKey(bucket), bucket.doc_count)
-        // }));
-        this.price = [];
+        this.price = data.aggregations.global.price.price.buckets.filter(bucket => bucket.doc_count > 0).map(bucket => ({
+            bucket,
+            displayName: formatDisplayName(this.$sce, formatPriceKey(bucket), bucket.doc_count)
+        }));
     }
 
     onFacetSelectionChanged(field, filter) {

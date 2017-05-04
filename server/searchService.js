@@ -12,27 +12,6 @@ const esConfig = () => {
 
 const client = new es.Client(esConfig());
 
-// const aggs = {
-//     'price': {
-//         "range": {
-//             "field": "Price",
-//             "ranges": [
-//                 { "to": 200 },
-//                 { "from": 200, "to": 250 },
-//                 { "from": 250, "to": 300 },
-//                 { "from": 300, "to": 350 },
-//                 { "from": 350, "to": 400 },
-//                 { "from": 400, "to": 450 },
-//                 { "from": 450, "to": 500 },
-//                 { "from": 500, "to": 550 },
-//                 { "from": 550, "to": 600 },
-//                 { "from": 600, "to": 650 },
-//                 { "from": 650 }
-//             ]
-//         }
-//     }
-// };
-
 const notBrandFilter = f => {
     if (f.terms && f.terms['Brand.keyword']) return false;
     return true;
@@ -48,7 +27,12 @@ const notFitTypeFilter = f => {
     return true;
 };
 
-const addTrickyFitTypeAggregation = (aggs, filters) => {
+const notPriceFilter = f => {
+    if (f.range && f.range['Price']) return false;
+    return true;
+};
+
+const addFitTypeAggregation = (aggs, filters) => {
     const otherFilters = filters.filter(notFitTypeFilter);
     const name = 'fitType';
     aggs[name] = {
@@ -67,7 +51,7 @@ const addTrickyFitTypeAggregation = (aggs, filters) => {
     };
 };
 
-const addTrickyBrandsAggregation = (aggs, filters) => {
+const addBrandAggregation = (aggs, filters) => {
     const otherFilters = filters.filter(notBrandFilter);
     const name = 'brand';
     aggs[name] = {
@@ -86,7 +70,7 @@ const addTrickyBrandsAggregation = (aggs, filters) => {
     };
 };
 
-const addTrickyColoursAggregation = (aggs, filters) => {
+const addColourAggregation = (aggs, filters) => {
     const otherFilters = filters.filter(notColourFilter);
     const name = 'colour';
     aggs[name] = {
@@ -105,7 +89,39 @@ const addTrickyColoursAggregation = (aggs, filters) => {
     };
 };
 
-const addTrickyAggregations = (request, filters) => {
+const addPriceAggregation = (aggs, filters) => {
+    const otherFilters = filters.filter(notPriceFilter);
+    const name = 'price';
+    aggs[name] = {
+        filter: {
+            bool: {
+                filter: otherFilters
+            }
+        },
+        aggs: {
+            [name]: {
+                range: {
+                    field: 'Price',
+                    ranges: [
+                        { 'to': 200 },
+                        { 'from': 200, 'to': 250 },
+                        { 'from': 250, 'to': 300 },
+                        { 'from': 300, 'to': 350 },
+                        { 'from': 350, 'to': 400 },
+                        { 'from': 400, 'to': 450 },
+                        { 'from': 450, 'to': 500 },
+                        { 'from': 500, 'to': 550 },
+                        { 'from': 550, 'to': 600 },
+                        { 'from': 600, 'to': 650 },
+                        { 'from': 650 }
+                    ]
+                }
+            }
+        }
+    };
+};
+
+const addAggregations = (request, filters) => {
     request.body.aggs = {
         'global': {
             'global': {},
@@ -113,10 +129,10 @@ const addTrickyAggregations = (request, filters) => {
         }
     };
     const aggs = request.body.aggs.global.aggs;
-    addTrickyFitTypeAggregation(aggs, filters);
-    addTrickyBrandsAggregation(aggs, filters);
-    addTrickyColoursAggregation(aggs, filters);
-    // console.log(JSON.stringify(request, null, 2));
+    addFitTypeAggregation(aggs, filters);
+    addBrandAggregation(aggs, filters);
+    addColourAggregation(aggs, filters);
+    addPriceAggregation(aggs, filters);
     return request;
 };
 
@@ -126,7 +142,7 @@ const facets = (req, res) => {
         type: 'washers',
         body: {}
     };
-    client.search(addTrickyAggregations(request, []))
+    client.search(addAggregations(request, []))
         .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
 };
@@ -157,8 +173,7 @@ const search = (req, res) => {
             }
         };
     }
-    // console.log(JSON.stringify(filters, null, 2));
-    client.search(addTrickyAggregations(request, filters || []))
+    client.search(addAggregations(request, filters || []))
         .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
 };
