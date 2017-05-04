@@ -1,9 +1,19 @@
 <div>
-    <input
-        type="checkbox"
-        id="{{ vm.value.bucket.key }}"
-        ng-model="vm.value.selected"
-        ng-change="vm.onChange({value: vm.value})"
-    >
+    <ng-switch on="vm.isRange">
+        <input ng-switch-when="true"
+            type="radio"
+            id="{{ vm.value.bucket.key }}"
+            name="{{ vm.field }}"
+            ng-value="true"
+            ng-model="vm.value.selected"
+            ng-change="vm.onChange({value: vm.value})"
+        >
+        <input ng-switch-default
+            type="checkbox"
+            id="{{ vm.value.bucket.key }}"
+            ng-model="vm.value.selected"
+            ng-change="vm.onChange({value: vm.value})"
+        >
+    </ng-switch>
     <label for="{{ vm.value.bucket.key }}" ng-bind-html="vm.value.displayName" />
 </div>

@@ -3,9 +3,6 @@ import app from './app.module';
 class Controller {
     constructor() {
     }
-    // $onInit() {
-    //     this.value.selected = false;
-    // }
 }
 
 Controller.$inject = [];
@@ -16,6 +13,7 @@ const facetValue = {
     bindings: {
         field: '<',
         value: '<',
+        isRange: '<',
         onChange: '&'
     },
     controller: Controller,
