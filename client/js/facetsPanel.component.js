@@ -23,9 +23,8 @@ class Controller {
         this.$sce = $sce;
         this.SearchService = SearchService;
         this.filters = new Map();
-        $rootScope.$on(C.FACETS_RESULTS_EVENT, this.updateFacets.bind(this));
         $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.updateFacets.bind(this));
-        SearchService.facets();
+        SearchService.search();
     }
 
     updateFacets(_, data) {

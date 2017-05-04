@@ -87,17 +87,6 @@ const addAggregations = (request, filters) => {
     return request;
 };
 
-const facets = (req, res) => {
-    const request = {
-        index: 'products',
-        type: 'washers',
-        body: {}
-    };
-    client.search(addAggregations(request))
-        .then(response => sendJsonResponse(res, 200, response))
-        .catch(err => sendStatusResponse(res, 500, err.message));
-};
-
 const search = (req, res) => {
     const searchText = req.body.searchText;
     const filters = req.body.filters;
@@ -133,7 +122,6 @@ const sendJsonResponse = (res, status, content) => res.status(status).json(conte
 const sendStatusResponse = (res, status, content) => res.status(status).send(content);
 
 const router = express.Router();
-router.get('/facets', facets);
 router.post('/search', search);
 
 module.exports = router;
