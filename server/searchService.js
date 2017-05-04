@@ -12,54 +12,111 @@ const esConfig = () => {
 
 const client = new es.Client(esConfig());
 
-const aggs = {
-    'fitType': {
-        terms: {
-            field: 'FitTypeName.keyword'
-        }
-    },
-    'brand': {
-        terms: {
-            field: 'Brand.keyword'
-        }
-    },
-    'colour': {
-        terms: {
-            field: 'Colour.keyword'
-        }
-    },
-    'price': {
-        "range": {
-            "field": "Price",
-            "ranges": [
-                { "to": 200 },
-                { "from": 200, "to": 250 },
-                { "from": 250, "to": 300 },
-                { "from": 300, "to": 350 },
-                { "from": 350, "to": 400 },
-                { "from": 400, "to": 450 },
-                { "from": 450, "to": 500 },
-                { "from": 500, "to": 550 },
-                { "from": 550, "to": 600 },
-                { "from": 600, "to": 650 },
-                { "from": 650 }
-            ]
-        }
-    }
+// const aggs = {
+//     'price': {
+//         "range": {
+//             "field": "Price",
+//             "ranges": [
+//                 { "to": 200 },
+//                 { "from": 200, "to": 250 },
+//                 { "from": 250, "to": 300 },
+//                 { "from": 300, "to": 350 },
+//                 { "from": 350, "to": 400 },
+//                 { "from": 400, "to": 450 },
+//                 { "from": 450, "to": 500 },
+//                 { "from": 500, "to": 550 },
+//                 { "from": 550, "to": 600 },
+//                 { "from": 600, "to": 650 },
+//                 { "from": 650 }
+//             ]
+//         }
+//     }
+// };
+
+const notBrandFilter = f => {
+    if (f.terms && f.terms['Brand.keyword']) return false;
+    return true;
 };
 
-const addGlobalAggregations = request => {
-    request.body.aggs = {
-        'global': {
-            global: {},
-            aggs
+const notColourFilter = f => {
+    if (f.terms && f.terms['Colour.keyword']) return false;
+    return true;
+};
+
+const notFitTypeFilter = f => {
+    if (f.terms && f.terms['FitTypeName.keyword']) return false;
+    return true;
+};
+
+const addTrickyFitTypeAggregation = (aggs, filters) => {
+    const otherFilters = filters.filter(notFitTypeFilter);
+    const name = 'fitType';
+    aggs[name] = {
+        filter: {
+            bool: {
+                filter: otherFilters
+            }
+        },
+        aggs: {
+            [name]: {
+                terms: {
+                    field: "FitTypeName.keyword"
+                }
+            }
         }
     };
-    return request;
 };
 
-const addQueryAggregations = request => {
-    request.body.aggs = aggs;
+const addTrickyBrandsAggregation = (aggs, filters) => {
+    const otherFilters = filters.filter(notBrandFilter);
+    const name = 'brand';
+    aggs[name] = {
+        filter: {
+            bool: {
+                filter: otherFilters
+            }
+        },
+        aggs: {
+            [name]: {
+                terms: {
+                    field: "Brand.keyword"
+                }
+            }
+        }
+    };
+};
+
+const addTrickyColoursAggregation = (aggs, filters) => {
+    const otherFilters = filters.filter(notColourFilter);
+    const name = 'colour';
+    aggs[name] = {
+        filter: {
+            bool: {
+                filter: otherFilters
+            }
+        },
+        aggs: {
+            [name]: {
+                terms: {
+                    field: "Colour.keyword"
+                }
+            }
+        }
+    };
+};
+
+const addTrickyAggregations = (request, filters) => {
+    request.body.aggs = {
+        'global': {
+            'global': {},
+            aggs: {}
+        }
+    };
+    const aggs = request.body.aggs.global.aggs;
+    addTrickyFitTypeAggregation(aggs, filters);
+    addTrickyBrandsAggregation(aggs, filters);
+    addTrickyColoursAggregation(aggs, filters);
+    // console.log(JSON.stringify(request, null, 2));
     return request;
 };
 
@@ -69,7 +126,7 @@ const facets = (req, res) => {
         type: 'washers',
         body: {}
     };
-    client.search(addGlobalAggregations(request))
+    client.search(addTrickyAggregations(request, []))
         .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
 };
@@ -100,7 +157,8 @@ const search = (req, res) => {
             }
         };
     }
-    client.search(addQueryAggregations(request))
+    // console.log(JSON.stringify(filters, null, 2));
+    client.search(addTrickyAggregations(request, filters || []))
         .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
 };
