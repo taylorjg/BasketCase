@@ -60,6 +60,7 @@ const addRangeAggregation = (aggs, activeFilters, name, field, ranges) => {
 };
 
 const addAggregations = (request, filters) => {
+    filters = filters || [];
     request.body.aggs = {
         'global': {
             'global': {},
@@ -92,7 +93,7 @@ const facets = (req, res) => {
         type: 'washers',
         body: {}
     };
-    client.search(addAggregations(request, []))
+    client.search(addAggregations(request))
         .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
 };
@@ -123,7 +124,7 @@ const search = (req, res) => {
             }
         };
     }
-    client.search(addAggregations(request, filters || []))
+    client.search(addAggregations(request, filters))
         .then(response => sendJsonResponse(res, 200, response))
         .catch(err => sendStatusResponse(res, 500, err.message));
 };
