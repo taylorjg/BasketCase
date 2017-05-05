@@ -2,9 +2,9 @@ import app from './app.module';
 import * as C from './constants';
 
 class SearchService {
-    constructor($http, $rootScope) {
-        this.$http = $http;
+    constructor($rootScope, $http) {
         this.$rootScope = $rootScope;
+        this.$http = $http;
         this.lastSearchOptions = {};
     }
 
@@ -18,6 +18,7 @@ class SearchService {
         return this.$http
             .post(url, searchOptions)
             .then(response => {
+                response.data.hits.searchText = searchOptions.searchText;
                 response.data.hits.pageSize = searchOptions.pageSize;
                 response.data.hits.currentPage = searchOptions.currentPage;
                 this.$rootScope.$broadcast(C.SEARCH_RESULTS_EVENT, response.data);
@@ -33,6 +34,6 @@ class SearchService {
     }
 }
 
-SearchService.$inject = ['$http', '$rootScope'];
+SearchService.$inject = ['$rootScope', '$http'];
 
 app.service(SearchService.name, SearchService);

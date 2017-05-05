@@ -1,16 +1,21 @@
 import app from './app.module';
+import * as C from './constants';
 
 class Controller {
-    constructor(SearchService) {
+    constructor($rootScope, SearchService) {
+        this.$rootScope = $rootScope;
         this.SearchService = SearchService;
+        this.searchText = "";
     }
+
     onSearch(searchText) {
-        console.log(`[onSearch] searchText: ${searchText}`);
+        this.$rootScope.$broadcast(C.RESET_ALL_FACETS_EVENT, false);
         this.SearchService.search({ searchText, currentPage: 1 });
+        this.searchText = "";
     }
 }
 
-Controller.$inject = ['SearchService'];
+Controller.$inject = ['$rootScope', 'SearchService'];
 
 const searchPanel = {
     selector: 'searchPanel',

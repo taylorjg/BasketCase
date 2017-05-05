@@ -4,6 +4,7 @@ import * as C from './constants';
 class Controller {
     constructor($rootScope, SearchService) {
         this.SearchService = SearchService;
+        this.searchText = "";
         this.results = [];
         this.total = 0;
         this.from = 0;
@@ -15,6 +16,7 @@ class Controller {
     }
 
     onSearchResults(_, data) {
+        this.searchText = data.hits.searchText;
         this.results = data.hits.hits.map(hit => hit._source);
         this.total = data.hits.total;
         this.from = (data.hits.pageSize * (data.hits.currentPage - 1)) + 1;

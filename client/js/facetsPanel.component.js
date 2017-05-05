@@ -20,6 +20,7 @@ const formatDisplayName = ($sce, name, count) => $sce.trustAsHtml(`${name} (${co
 
 class Controller {
     constructor($rootScope, $sce, SearchService) {
+        this.$rootScope = $rootScope;
         this.$sce = $sce;
         this.SearchService = SearchService;
         this.fitType = [];
@@ -27,11 +28,12 @@ class Controller {
         this.colour = [];
         this.price = [];
         this.filters = new Map();
-        $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.updateFacets.bind(this));
+        $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.onSearchResultsEvent.bind(this));
+        $rootScope.$on(C.RESET_ALL_FACETS_EVENT, this.onResetAllFacetsEvent.bind(this));
         SearchService.search();
     }
 
-    updateFacets(_, data) {
+    onSearchResultsEvent(_, data) {
         this.fitType = data.aggregations.global.fitType.fitType.buckets.map(bucket => ({
             bucket,
             displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
@@ -59,13 +61,13 @@ class Controller {
         this.search();
     }
 
-    onResetAll() {
-        this.fitType.forEach(v => v.selected = false);
-        this.brand.forEach(v => v.selected = false);
-        this.colour.forEach(v => v.selected = false);
-        this.price.forEach(v => v.selected = false);
+    onResetAllFacetsEvent(_, doSearch) {
         this.filters.clear();
-        this.search();
+        doSearch && this.search();
+    }
+
+    onResetAll() {
+        this.$rootScope.$broadcast(C.RESET_ALL_FACETS_EVENT, true);
     }
 
     search() {

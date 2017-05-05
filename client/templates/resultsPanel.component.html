@@ -1,45 +1,48 @@
+<p class="results-for-search" ng-if="vm.searchText">Search results for "{{ vm.searchText }}"</p>
+
 <ng-switch on="vm.total > 0">
-    <p class="results-count" ng-switch-when="true">
-        Total number of matching products: {{ vm.total }}
-        (showing {{ vm.from }} - {{ vm.to }})
-    </p>
+    <div ng-switch-when="true">
+        <p class="results-count">
+            Total number of matching products: {{ vm.total }}
+            (showing {{ vm.from }} - {{ vm.to }})
+        </p>
+        <div class="text-center">
+            <div
+                class="pagination-sm"
+                uib-pagination
+                force-ellipses="true"
+                boundary-links="false"
+                boundary-link-numbers="false"
+                rotate="true"
+                max-size="6"
+                items-per-page="vm.pageSize"
+                num-pages="vm.numPages"
+                total-items="vm.pageSize * vm.numPages"
+                ng-model="vm.currentPage"
+                ng-change="vm.onPageChanged()"
+            >
+            </div>
+        </div>
+
+        <product-details ng-repeat="product in vm.results" product="product"></product-details>
+
+        <div class="text-center">
+            <div
+                class="pagination-sm"
+                uib-pagination
+                force-ellipses="true"
+                boundary-links="false"
+                boundary-link-numbers="false"
+                rotate="true"
+                max-size="6"
+                items-per-page="vm.pageSize"
+                num-pages="vm.numPages"
+                total-items="vm.pageSize * vm.numPages"
+                ng-model="vm.currentPage"
+                ng-change="vm.onPageChanged()"
+            >
+            </div>
+        </div>
+    </div>
     <p class="results-count" ng-switch-default>(no results)</p>
 </ng-switch>
-
-<div class="text-center">
-    <div
-        class="pagination-sm"
-        uib-pagination
-        force-ellipses="true"
-        boundary-links="false"
-        boundary-link-numbers="false"
-        rotate="true"
-        max-size="6"
-        items-per-page="vm.pageSize"
-        num-pages="vm.numPages"
-        total-items="vm.pageSize * vm.numPages"
-        ng-model="vm.currentPage"
-        ng-change="vm.onPageChanged()"
-    >
-    </div>
-</div>
-
-<product-details ng-repeat="product in vm.results" product="product"></product-details>
-
-<div class="text-center">
-    <div
-        class="pagination-sm"
-        uib-pagination
-        force-ellipses="true"
-        boundary-links="false"
-        boundary-link-numbers="false"
-        rotate="true"
-        max-size="6"
-        items-per-page="vm.pageSize"
-        num-pages="vm.numPages"
-        total-items="vm.pageSize * vm.numPages"
-        ng-model="vm.currentPage"
-        ng-change="vm.onPageChanged()"
-    >
-    </div>
-</div>

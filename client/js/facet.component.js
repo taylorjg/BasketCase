@@ -1,9 +1,11 @@
 import app from './app.module';
+import * as C from './constants';
 
 class Controller {
-    constructor(SearchService) {
+    constructor($rootScope, SearchService) {
         this.SearchService = SearchService;
         this.selectedValues = [];
+        $rootScope.$on(C.RESET_ALL_FACETS_EVENT, this.onResetAllFacetsEvent.bind(this));
     }
 
     $onChanges() {
@@ -42,6 +44,11 @@ class Controller {
         this.onFacetSelectionChanged({ field: this.field, filter: null });
     }
 
+    onResetAllFacetsEvent() {
+        this.selectedValues.forEach(v => v.selected = false);
+        this.selectedValues = [];
+    }
+
     buildFilter() {
         return this.isRange
             ? this.rangeFilter()
@@ -73,7 +80,7 @@ class Controller {
     }
 }
 
-Controller.$inject = ['SearchService'];
+Controller.$inject = ['$rootScope', 'SearchService'];
 
 const facet = {
     selector: 'facet',

@@ -48,6 +48,11 @@ body {
     font-style: italic;
 }
 
+.results-for-search {
+    text-align: center;
+    font-style: italic;
+}
+
 .productInfoArea {
     width: 768px;
     height: auto;
