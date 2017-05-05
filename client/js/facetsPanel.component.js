@@ -22,6 +22,10 @@ class Controller {
     constructor($rootScope, $sce, SearchService) {
         this.$sce = $sce;
         this.SearchService = SearchService;
+        this.fitType = [];
+        this.brand = [];
+        this.colour = [];
+        this.price = [];
         this.filters = new Map();
         $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.updateFacets.bind(this));
         SearchService.search();
@@ -52,6 +56,15 @@ class Controller {
         } else {
             this.filters.delete(field);
         }
+        this.search();
+    }
+
+    onResetAll() {
+        this.fitType.forEach(v => v.selected = false);
+        this.brand.forEach(v => v.selected = false);
+        this.colour.forEach(v => v.selected = false);
+        this.price.forEach(v => v.selected = false);
+        this.filters.clear();
         this.search();
     }
 

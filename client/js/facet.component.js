@@ -7,8 +7,8 @@ class Controller {
     }
 
     $onChanges() {
-        const valueWasPreviouslySelected = newValue => 
-            this.selectedValues.find(oldValue => newValue.bucket.key === oldValue.bucket.key);
+        const valueWasPreviouslySelected = nv => this.selectedValues.find(ov => nv.bucket.key === ov.bucket.key);
+        this.selectedValues = this.selectedValues.filter(v => v.selected);
         if (this.values) {
             const oldSelectedValuesCount = this.selectedValues.length;
             this.selectedValues = this.values.filter(valueWasPreviouslySelected);

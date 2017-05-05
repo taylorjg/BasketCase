@@ -21,6 +21,12 @@ body {
     cursor: pointer;
 }
 
+.facet-reset-all {
+    display: block;
+    /*text-align: right;*/
+    cursor: pointer;
+}
+
 .facet-list {
     list-style: none;
     margin: 0;
