@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "angular": "^1.6.4",
+    "angular-ui-bootstrap": "^2.5.0",
     "body-parser": "^1.17.1",
     "elasticsearch": "^13.0.0",
     "express": "^4.15.2"

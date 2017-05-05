@@ -88,12 +88,16 @@ const addAggregations = (request, filters) => {
 };
 
 const search = (req, res) => {
+    const pageSize = Number(req.body.pageSize) || 10;
+    const currentPage = Number(req.body.currentPage) || 1;
     const searchText = req.body.searchText;
     const filters = req.body.filters;
     const request = {
         index: 'products',
         type: 'washers',
         body: {
+            size: pageSize,
+            from: pageSize * (currentPage - 1),
             query: {
                 match_all: {}
             }

@@ -57,7 +57,7 @@ class Controller {
 
     search() {
         const filters = Array.from(this.filters.values());
-        const searchOptions = { filters };
+        const searchOptions = { filters, currentPage: 1 };
         this.SearchService.search(searchOptions);
     }
 }

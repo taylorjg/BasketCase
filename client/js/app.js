@@ -6,3 +6,5 @@ import './facetValue.component';
 import './resultsPanel.component';
 import './productDetails.component';
 import './search.service';
+import 'angular-ui-bootstrap/dist/ui-bootstrap';
+import 'angular-ui-bootstrap/dist/ui-bootstrap-tpls';
