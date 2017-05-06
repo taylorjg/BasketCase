@@ -23,11 +23,11 @@ class Controller {
         this.price = this.getFacet(response, 4);
     }
 
-    onFacetSelectionChanged(id, filter) {
+    onFacetSelectionChanged(facetId, filter) {
         if (filter) {
-            this.filters.set(id, filter);
+            this.filters.set(facetId, filter);
         } else {
-            this.filters.delete(id);
+            this.filters.delete(facetId);
         }
         this.search();
     }
@@ -49,7 +49,7 @@ class Controller {
 
     getFacet(response, id) {
         const f = response.facets.find(f => f.id === id);
-        f.values.forEach(v => v.text = this.$sce.trustAsHtml(`${v.displayName} (${v.count})`));
+        f.facetValues.forEach(v => v.text = this.$sce.trustAsHtml(`${v.displayName} (${v.count})`));
         return f;
     }
 }

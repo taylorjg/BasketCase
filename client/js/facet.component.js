@@ -11,23 +11,21 @@ class Controller {
     $onChanges() {
         const valueWasPreviouslySelected = nv => this.selectedValues.find(ov => nv.key === ov.key);
         this.selectedValues = this.selectedValues.filter(v => v.selected);
-        console.log(`this.values before: ${this.values}`);
-        if (this.values) {
-            console.log(`this.values inside: ${this.values}`);
+        if (this.facet && this.facet.facetValues) {
             const oldSelectedValuesCount = this.selectedValues.length;
-            this.selectedValues = this.values.filter(valueWasPreviouslySelected);
+            this.selectedValues = this.facet.facetValues.filter(valueWasPreviouslySelected);
             this.selectedValues.forEach(v => v.selected = true);
             const newSelectedValuesCount = this.selectedValues.length;
             if (newSelectedValuesCount < oldSelectedValuesCount) {
                 const filter = this.buildFilter();
-                this.onFacetSelectionChanged({ id: this.id, filter });
+                this.onFacetSelectionChanged({ facetId: this.facet.id, filter });
             }
         }
     }
 
     onChange(value) {
         if (value.selected) {
-            if (this.isRange) {
+            if (this.facet.isRange) {
                 this.selectedValues.forEach(v => v.selected = false);
                 this.selectedValues = [value];
             } else {
@@ -37,13 +35,13 @@ class Controller {
             this.selectedValues = this.selectedValues.filter(v => v !== value);
         }
         const filter = this.buildFilter();
-        this.onFacetSelectionChanged({ id: this.id, filter });
+        this.onFacetSelectionChanged({ facetId: this.facet.id, filter });
     }
 
     onReset() {
         this.selectedValues.forEach(v => v.selected = false);
         this.selectedValues = [];
-        this.onFacetSelectionChanged({ id: this.id, filter: null });
+        this.onFacetSelectionChanged({ facetId: this.facet.id, filter: null });
     }
 
     onResetAllFacetsEvent() {
@@ -52,7 +50,7 @@ class Controller {
     }
 
     buildFilter() {
-        return this.isRange
+        return this.facet.isRange
             ? this.rangeFilter()
             : this.termsFilter();
     }
@@ -61,7 +59,7 @@ class Controller {
         return this.selectedValues.length
             ? {
                 type: 'terms',
-                facetId: this.id,
+                facetId: this.facet.id,
                 keys: this.selectedValues.map(sv => sv.key)
             }
             : null;
@@ -72,7 +70,7 @@ class Controller {
         return selectedValue
             ? {
                 type: 'range',
-                facetId: this.id,
+                facetId: this.facet.id,
                 from: selectedValue.from,
                 to: selectedValue.to
             }
@@ -86,11 +84,7 @@ const facet = {
     selector: 'facet',
     templateUrl: 'templates/facet.component.html',
     bindings: {
-        id: '<',
-        displayName: '<',
-        field: '<',
-        values: '<',
-        isRange: '<',
+        facet: '<',
         onFacetSelectionChanged: '&'
     },
     controller: Controller,

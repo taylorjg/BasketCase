@@ -1,41 +1,5 @@
 <a class="facet-reset-all" ng-show="vm.filters.size" ng-click="vm.onResetAll()">Reset All</a>
-
-<facet
-    id="vm.fitType.id"
-    display-name="vm.fitType.displayName"
-    field="'FitTypeName.keyword'"
-    values="vm.fitType.values"
-    is-range="vm.fitType.isRange"
-    on-facet-selection-changed="vm.onFacetSelectionChanged(id, filter)"
->
-</facet>
-
-<facet
-    id="vm.brand.id"
-    display-name="vm.brand.displayName"
-    field="'Brand.keyword'"
-    values="vm.brand.values"
-    is-range="vm.brand.isRange"
-    on-facet-selection-changed="vm.onFacetSelectionChanged(id, filter)"
->
-</facet>
-
-<facet
-    id="vm.colour.id"
-    display-name="vm.colour.displayName"
-    field="'Colour.keyword'"
-    values="vm.colour.values"
-    is-range="vm.colour.isRange"
-    on-facet-selection-changed="vm.onFacetSelectionChanged(id, filter)"
->
-</facet>
-
-<facet
-    id="vm.price.id"
-    display-name="vm.price.displayName"
-    field="'Price'"
-    values="vm.price.values"
-    is-range="vm.price.isRange"
-    on-facet-selection-changed="vm.onFacetSelectionChanged(id, filter)"
->
-</facet>
+<facet facet="vm.fitType" on-facet-selection-changed="vm.onFacetSelectionChanged(facetId, filter)"></facet>
+<facet facet="vm.brand" on-facet-selection-changed="vm.onFacetSelectionChanged(facetId, filter)"></facet>
+<facet facet="vm.colour" on-facet-selection-changed="vm.onFacetSelectionChanged(facetId, filter)"></facet>
+<facet facet="vm.price" on-facet-selection-changed="vm.onFacetSelectionChanged(facetId, filter)"></facet>

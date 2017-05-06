@@ -1,7 +1,7 @@
-<h4 class="facet-label">{{ vm.displayName }}</h4>
+<h4 class="facet-label">{{ vm.facet.displayName }}</h4>
 <a class="facet-reset" ng-show="vm.selectedValues.length" ng-click="vm.onReset()">Reset</a>
 <ul class="facet-list">
-    <li ng-repeat="value in vm.values">
-        <facet-value facet-id="vm.id" value="value" is-range="vm.isRange" on-change="vm.onChange(value)"></facet-value>
+    <li ng-repeat="value in vm.facet.facetValues">
+        <facet-value facet-id="vm.facet.id" value="value" is-range="vm.facet.isRange" on-change="vm.onChange(value)"></facet-value>
     </li>
 </ul>

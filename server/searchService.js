@@ -133,14 +133,14 @@ const aggToTermsFacet = (agg, id, displayName, displayNameFormatter) => ({
     id,
     isRange: false,
     displayName,
-    values: bucketsToTermsFacetValues(agg.buckets, displayNameFormatter)
+    facetValues: bucketsToTermsFacetValues(agg.buckets, displayNameFormatter)
 });
 
 const aggToRangeFacet = (agg, id, displayName, displayNameFormatter) => ({
     id,
     isRange: true,
     displayName,
-    values: bucketsToRangeFacetValues(agg.buckets, displayNameFormatter)
+    facetValues: bucketsToRangeFacetValues(agg.buckets, displayNameFormatter)
 });
 
 const hitToResult = hit => hit._source;
