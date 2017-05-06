@@ -1,23 +1,6 @@
 import app from './app.module';
 import * as C from './constants';
 
-const formatPriceKey = bucket => {
-    const gotFrom = Number.isInteger(bucket.from);
-    const gotTo = Number.isInteger(bucket.to);
-    if (gotFrom && gotTo) {
-        return `&pound;${bucket.from} - &pound;${bucket.to}`;
-    }
-    if (gotFrom) {
-        return `&pound;${bucket.from} or more`;
-    }
-    if (gotTo) {
-        return `&pound;${bucket.to} or less`;
-    }
-    return bucket.key;
-};
-
-const formatDisplayName = ($sce, name, count) => $sce.trustAsHtml(`${name} (${count})`);
-
 class Controller {
     constructor($rootScope, $sce, SearchService) {
         this.$rootScope = $rootScope;
@@ -33,30 +16,18 @@ class Controller {
         SearchService.search();
     }
 
-    onSearchResultsEvent(_, data) {
-        this.fitType = data.aggregations.global.fitType.fitType.buckets.map(bucket => ({
-            bucket,
-            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
-        }));
-        this.brand = data.aggregations.global.brand.brand.buckets.map(bucket => ({
-            bucket,
-            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
-        }));
-        this.colour = data.aggregations.global.colour.colour.buckets.map(bucket => ({
-            bucket,
-            displayName: formatDisplayName(this.$sce, bucket.key, bucket.doc_count)
-        }));
-        this.price = data.aggregations.global.price.price.buckets.filter(bucket => bucket.doc_count > 0).map(bucket => ({
-            bucket,
-            displayName: formatDisplayName(this.$sce, formatPriceKey(bucket), bucket.doc_count)
-        }));
+    onSearchResultsEvent(_, response) {
+        this.fitType = this.getFacet(response, 1);
+        this.brand = this.getFacet(response, 2);
+        this.colour = this.getFacet(response, 3);
+        this.price = this.getFacet(response, 4);
     }
 
-    onFacetSelectionChanged(field, filter) {
+    onFacetSelectionChanged(id, filter) {
         if (filter) {
-            this.filters.set(field, filter);
+            this.filters.set(id, filter);
         } else {
-            this.filters.delete(field);
+            this.filters.delete(id);
         }
         this.search();
     }
@@ -74,6 +45,12 @@ class Controller {
         const filters = Array.from(this.filters.values());
         const searchOptions = { filters, currentPage: 1 };
         this.SearchService.search(searchOptions);
+    }
+
+    getFacet(response, id) {
+        const f = response.facets.find(f => f.id === id);
+        f.values.forEach(v => v.text = this.$sce.trustAsHtml(`${v.displayName} (${v.count})`));
+        return f;
     }
 }
 

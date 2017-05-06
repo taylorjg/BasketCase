@@ -9,16 +9,18 @@ class Controller {
     }
 
     $onChanges() {
-        const valueWasPreviouslySelected = nv => this.selectedValues.find(ov => nv.bucket.key === ov.bucket.key);
+        const valueWasPreviouslySelected = nv => this.selectedValues.find(ov => nv.key === ov.key);
         this.selectedValues = this.selectedValues.filter(v => v.selected);
+        console.log(`this.values before: ${this.values}`);
         if (this.values) {
+            console.log(`this.values inside: ${this.values}`);
             const oldSelectedValuesCount = this.selectedValues.length;
             this.selectedValues = this.values.filter(valueWasPreviouslySelected);
             this.selectedValues.forEach(v => v.selected = true);
             const newSelectedValuesCount = this.selectedValues.length;
             if (newSelectedValuesCount < oldSelectedValuesCount) {
                 const filter = this.buildFilter();
-                this.onFacetSelectionChanged({ field: this.field, filter });
+                this.onFacetSelectionChanged({ id: this.id, filter });
             }
         }
     }
@@ -35,13 +37,13 @@ class Controller {
             this.selectedValues = this.selectedValues.filter(v => v !== value);
         }
         const filter = this.buildFilter();
-        this.onFacetSelectionChanged({ field: this.field, filter });
+        this.onFacetSelectionChanged({ id: this.id, filter });
     }
 
     onReset() {
         this.selectedValues.forEach(v => v.selected = false);
         this.selectedValues = [];
-        this.onFacetSelectionChanged({ field: this.field, filter: null });
+        this.onFacetSelectionChanged({ id: this.id, filter: null });
     }
 
     onResetAllFacetsEvent() {
@@ -58,8 +60,9 @@ class Controller {
     termsFilter() {
         return this.selectedValues.length
             ? {
+                // TODO: decouple this from Elasticsearch - use this.id instead of this.field
                 terms: {
-                    [this.field]: this.selectedValues.map(v => v.bucket.key)
+                    [this.field]: this.selectedValues.map(v => v.key)
                 }
             }
             : null;
@@ -69,10 +72,11 @@ class Controller {
         const value = this.selectedValues.length === 1 ? this.selectedValues[0] : null;
         return value && value.selected
             ? {
+                // TODO: decouple this from Elasticsearch - use this.id instead of this.field
                 range: {
                     [this.field]: {
-                        gte: value.bucket.from,
-                        lt: value.bucket.to
+                        gte: value.from,
+                        lt: value.to
                     }
                 }
             }
@@ -86,7 +90,8 @@ const facet = {
     selector: 'facet',
     templateUrl: 'templates/facet.component.html',
     bindings: {
-        label: '<',
+        id: '<',
+        displayName: '<',
         field: '<',
         values: '<',
         isRange: '<',

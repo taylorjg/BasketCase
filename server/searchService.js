@@ -87,6 +87,76 @@ const addAggregations = (request, filters) => {
     return request;
 };
 
+// const formatPriceKey = bucket => {
+//     const gotFrom = Number.isInteger(bucket.from);
+//     const gotTo = Number.isInteger(bucket.to);
+//     if (gotFrom && gotTo) {
+//         return `&pound;${bucket.from} - &pound;${bucket.to}`;
+//     }
+//     if (gotFrom) {
+//         return `&pound;${bucket.from} or more`;
+//     }
+//     if (gotTo) {
+//         return `&pound;${bucket.to} or less`;
+//     }
+//     return bucket.key;
+// };
+
+const bucketToCommonFacetValue = (bucket, index) => ({
+    id: index,
+    displayName: bucket.key,
+    key: bucket.key,
+    count: bucket.doc_count
+});
+
+const bucketToTermsFacetValue = (bucket, index) => bucketToCommonFacetValue(bucket, index);
+
+const bucketToRangeFacetValue = (bucket, index) => {
+    const facet = bucketToCommonFacetValue(bucket, index);
+    facet.from = bucket.from;
+    facet.to = bucket.to;
+    return facet;
+};
+
+const bucketsToTermsFacetValues = buckets => buckets.map(bucketToTermsFacetValue);
+const bucketsToRangeFacetValues = buckets => buckets.map(bucketToRangeFacetValue);
+
+const aggToTermsFacet = (agg, id, displayName) => ({
+    id,
+    isRange: false,
+    displayName,
+    values: bucketsToTermsFacetValues(agg.buckets)
+});
+
+const aggToRangeFacet = (agg, id, displayName) => ({
+    id,
+    isRange: true,
+    displayName,
+    values: bucketsToRangeFacetValues(agg.buckets)
+});
+
+const hitToResult = hit => hit._source;
+
+const elasticsearchHitsToMyResults = (pageSize, currentPage, searchText, hits) => ({
+    total: hits.total,
+    pageSize,
+    currentPage,
+    searchText,
+    products: hits.hits.map(hitToResult)
+});
+
+const elasticsearchAggsToMyFacets = aggs =>
+    [].concat(
+        aggToTermsFacet(aggs.fitType.fitType, 1, 'Fit Type'),
+        aggToTermsFacet(aggs.brand.brand, 2, 'Brand'),
+        aggToTermsFacet(aggs.colour.colour, 3, 'Colour'),
+        aggToRangeFacet(aggs.price.price, 4, 'Price')); // TODO: pass in a function to format the display name
+
+const elasticsearchResponseToMyResponse = (pageSize, currentPage, searchText, response) => ({
+    results: elasticsearchHitsToMyResults(pageSize, currentPage, searchText, response.hits),
+    facets: elasticsearchAggsToMyFacets(response.aggregations.global)
+});
+
 const search = (req, res) => {
     const pageSize = Number(req.body.pageSize) || 10;
     const currentPage = Number(req.body.currentPage) || 1;
@@ -118,8 +188,15 @@ const search = (req, res) => {
         };
     }
     client.search(addAggregations(request, filters))
-        .then(response => sendJsonResponse(res, 200, response))
-        .catch(err => sendStatusResponse(res, 500, err.message));
+        .then(response => {
+            const myResponse = elasticsearchResponseToMyResponse(pageSize, currentPage, searchText, response);
+            console.log(`myResponse: ${JSON.stringify(myResponse, null, 2)}`);
+            return sendJsonResponse(res, 200, myResponse);
+        })
+        .catch(err => {
+            console.error(`ERROR: ${err}`);
+            sendStatusResponse(res, 500, err.message);
+        });
 };
 
 const sendJsonResponse = (res, status, content) => res.status(status).json(content);

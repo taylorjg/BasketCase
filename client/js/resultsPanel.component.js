@@ -15,15 +15,16 @@ class Controller {
         $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.onSearchResults.bind(this));
     }
 
-    onSearchResults(_, data) {
-        this.searchText = data.hits.searchText;
-        this.results = data.hits.hits.map(hit => hit._source);
-        this.total = data.hits.total;
-        this.from = (data.hits.pageSize * (data.hits.currentPage - 1)) + 1;
-        this.to = Math.min((data.hits.pageSize * data.hits.currentPage), data.hits.total);
-        this.pageSize = data.hits.pageSize;
-        this.numPages = Math.ceil(data.hits.total / data.hits.pageSize);
-        this.currentPage = data.hits.currentPage;
+    onSearchResults(_, response) {
+        const results = response.results;
+        this.searchText = results.searchText;
+        this.products = results.products;
+        this.total = results.total;
+        this.from = (results.pageSize * (results.currentPage - 1)) + 1;
+        this.to = Math.min((results.pageSize * results.currentPage), results.total);
+        this.pageSize = results.pageSize;
+        this.numPages = Math.ceil(results.total / results.pageSize);
+        this.currentPage = results.currentPage;
     }
 
     onPageChanged() {
