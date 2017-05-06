@@ -125,7 +125,9 @@ const bucketsToTermsFacetValues = (buckets, displayNameFormatter) =>
     buckets.map(bucketToTermsFacetValue(displayNameFormatter));
 
 const bucketsToRangeFacetValues = (buckets, displayNameFormatter) =>
-    buckets.map(bucketToRangeFacetValue(displayNameFormatter));
+    buckets
+        .filter(bucket => bucket.doc_count)
+        .map(bucketToRangeFacetValue(displayNameFormatter));
 
 const aggToTermsFacet = (agg, id, displayName, displayNameFormatter) => ({
     id,
@@ -153,21 +155,72 @@ const elasticsearchHitsToMyResults = (pageSize, currentPage, searchText, hits) =
 
 const elasticsearchAggsToMyFacets = aggs =>
     [].concat(
-        aggToTermsFacet(aggs.fitType.fitType, 1, 'Fit Type'),
-        aggToTermsFacet(aggs.brand.brand, 2, 'Brand'),
-        aggToTermsFacet(aggs.colour.colour, 3, 'Colour'),
-        aggToRangeFacet(aggs.price.price, 4, 'Price', formatPriceKey));
+        aggToTermsFacet(aggs.fitType.fitType, FACET_ID_FIT_TYPE, 'Fit Type'),
+        aggToTermsFacet(aggs.brand.brand, FACET_ID_BRAND, 'Brand'),
+        aggToTermsFacet(aggs.colour.colour, FACET_ID_COLOUR, 'Colour'),
+        aggToRangeFacet(aggs.price.price, FACET_ID_PRICE, 'Price', formatPriceKey));
 
 const elasticsearchResponseToMyResponse = (pageSize, currentPage, searchText, response) => ({
     results: elasticsearchHitsToMyResults(pageSize, currentPage, searchText, response.hits),
     facets: elasticsearchAggsToMyFacets(response.aggregations.global)
 });
 
+const FACET_ID_FIT_TYPE = 1;
+const FACET_ID_BRAND = 2;
+const FACET_ID_COLOUR = 3;
+const FACET_ID_PRICE = 4;
+
+const FACET_IDS_TO_FIELD_NAMES = {
+    [FACET_ID_FIT_TYPE]: 'FitTypeName.keyword',
+    [FACET_ID_BRAND]: 'Brand.keyword',
+    [FACET_ID_COLOUR]: 'Colour.keyword',
+    [FACET_ID_PRICE]: 'Price',
+};
+
+const myFilterToTermsFilter = filter => {
+    const fieldName = FACET_IDS_TO_FIELD_NAMES[filter.facetId];
+    return {
+        terms: {
+            [fieldName]: filter.keys
+        }
+    };
+};
+
+const myFilterToRangeFilter = filter => {
+    const fieldName = FACET_IDS_TO_FIELD_NAMES[filter.facetId];
+    const f = {
+        range: {
+            [fieldName]: {}
+        }
+    };
+    if (filter.from) {
+        f.range[fieldName].gte = filter.from;
+    }
+    if (filter.to) {
+        f.range[fieldName].lt = filter.to;
+    }
+    return f;
+};
+
+const myFilterToElasticsearchFilter = filter => {
+    switch (filter.type) {
+        case 'terms': return myFilterToTermsFilter(filter);
+        case 'range': return myFilterToRangeFilter(filter);
+        default: return null;
+    }
+};
+
+const myFiltersToElasticsearchFilters = filters =>
+    filters
+        .map(myFilterToElasticsearchFilter)
+        .filter(f => f);
+
 const search = (req, res) => {
     const pageSize = Number(req.body.pageSize) || 10;
     const currentPage = Number(req.body.currentPage) || 1;
-    const searchText = req.body.searchText;
-    const filters = req.body.filters;
+    const searchText = req.body.searchText || "";
+    const filters = req.body.filters || [];
+    const esFilters = myFiltersToElasticsearchFilters(filters);
     const request = {
         index: 'products',
         type: 'washers',
@@ -186,14 +239,14 @@ const search = (req, res) => {
             }
         };
     }
-    if (filters) {
+    if (esFilters.length) {
         request.body.query = {
             bool: {
-                filter: filters
+                filter: esFilters
             }
         };
     }
-    client.search(addAggregations(request, filters))
+    client.search(addAggregations(request, esFilters))
         .then(response => {
             const myResponse = elasticsearchResponseToMyResponse(pageSize, currentPage, searchText, response);
             return sendJsonResponse(res, 200, myResponse);

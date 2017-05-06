@@ -60,25 +60,21 @@ class Controller {
     termsFilter() {
         return this.selectedValues.length
             ? {
-                // TODO: decouple this from Elasticsearch - use this.id instead of this.field
-                terms: {
-                    [this.field]: this.selectedValues.map(v => v.key)
-                }
+                type: 'terms',
+                facetId: this.id,
+                keys: this.selectedValues.map(sv => sv.key)
             }
             : null;
     }
 
     rangeFilter() {
-        const value = this.selectedValues.length === 1 ? this.selectedValues[0] : null;
-        return value && value.selected
+        const selectedValue = this.selectedValues.length === 1 ? this.selectedValues[0] : null;
+        return selectedValue
             ? {
-                // TODO: decouple this from Elasticsearch - use this.id instead of this.field
-                range: {
-                    [this.field]: {
-                        gte: value.from,
-                        lt: value.to
-                    }
-                }
+                type: 'range',
+                facetId: this.id,
+                from: selectedValue.from,
+                to: selectedValue.to
             }
             : null;
     }
