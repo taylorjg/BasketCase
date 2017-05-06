@@ -87,52 +87,58 @@ const addAggregations = (request, filters) => {
     return request;
 };
 
-// const formatPriceKey = bucket => {
-//     const gotFrom = Number.isInteger(bucket.from);
-//     const gotTo = Number.isInteger(bucket.to);
-//     if (gotFrom && gotTo) {
-//         return `&pound;${bucket.from} - &pound;${bucket.to}`;
-//     }
-//     if (gotFrom) {
-//         return `&pound;${bucket.from} or more`;
-//     }
-//     if (gotTo) {
-//         return `&pound;${bucket.to} or less`;
-//     }
-//     return bucket.key;
-// };
+const defaultDisplayNameFormatter = bucket => bucket.key;
 
-const bucketToCommonFacetValue = (bucket, index) => ({
+const formatPriceKey = bucket => {
+    const gotFrom = Number.isInteger(bucket.from);
+    const gotTo = Number.isInteger(bucket.to);
+    if (gotFrom && gotTo) {
+        return `&pound;${bucket.from} - &pound;${bucket.to}`;
+    }
+    if (gotFrom) {
+        return `&pound;${bucket.from} or more`;
+    }
+    if (gotTo) {
+        return `&pound;${bucket.to} or less`;
+    }
+    return bucket.key;
+};
+
+const bucketToCommonFacetValue = (bucket, index, displayNameFormatter) => ({
     id: index,
-    displayName: bucket.key,
+    displayName: (displayNameFormatter || defaultDisplayNameFormatter)(bucket),
     key: bucket.key,
     count: bucket.doc_count
 });
 
-const bucketToTermsFacetValue = (bucket, index) => bucketToCommonFacetValue(bucket, index);
+const bucketToTermsFacetValue = displayNameFormatter => (bucket, index) =>
+    bucketToCommonFacetValue(bucket, index, displayNameFormatter);
 
-const bucketToRangeFacetValue = (bucket, index) => {
-    const facet = bucketToCommonFacetValue(bucket, index);
+const bucketToRangeFacetValue = displayNameFormatter => (bucket, index) => {
+    const facet = bucketToCommonFacetValue(bucket, index, displayNameFormatter);
     facet.from = bucket.from;
     facet.to = bucket.to;
     return facet;
 };
 
-const bucketsToTermsFacetValues = buckets => buckets.map(bucketToTermsFacetValue);
-const bucketsToRangeFacetValues = buckets => buckets.map(bucketToRangeFacetValue);
+const bucketsToTermsFacetValues = (buckets, displayNameFormatter) =>
+    buckets.map(bucketToTermsFacetValue(displayNameFormatter));
 
-const aggToTermsFacet = (agg, id, displayName) => ({
+const bucketsToRangeFacetValues = (buckets, displayNameFormatter) =>
+    buckets.map(bucketToRangeFacetValue(displayNameFormatter));
+
+const aggToTermsFacet = (agg, id, displayName, displayNameFormatter) => ({
     id,
     isRange: false,
     displayName,
-    values: bucketsToTermsFacetValues(agg.buckets)
+    values: bucketsToTermsFacetValues(agg.buckets, displayNameFormatter)
 });
 
-const aggToRangeFacet = (agg, id, displayName) => ({
+const aggToRangeFacet = (agg, id, displayName, displayNameFormatter) => ({
     id,
     isRange: true,
     displayName,
-    values: bucketsToRangeFacetValues(agg.buckets)
+    values: bucketsToRangeFacetValues(agg.buckets, displayNameFormatter)
 });
 
 const hitToResult = hit => hit._source;
@@ -150,7 +156,7 @@ const elasticsearchAggsToMyFacets = aggs =>
         aggToTermsFacet(aggs.fitType.fitType, 1, 'Fit Type'),
         aggToTermsFacet(aggs.brand.brand, 2, 'Brand'),
         aggToTermsFacet(aggs.colour.colour, 3, 'Colour'),
-        aggToRangeFacet(aggs.price.price, 4, 'Price')); // TODO: pass in a function to format the display name
+        aggToRangeFacet(aggs.price.price, 4, 'Price', formatPriceKey));
 
 const elasticsearchResponseToMyResponse = (pageSize, currentPage, searchText, response) => ({
     results: elasticsearchHitsToMyResults(pageSize, currentPage, searchText, response.hits),
@@ -190,7 +196,6 @@ const search = (req, res) => {
     client.search(addAggregations(request, filters))
         .then(response => {
             const myResponse = elasticsearchResponseToMyResponse(pageSize, currentPage, searchText, response);
-            console.log(`myResponse: ${JSON.stringify(myResponse, null, 2)}`);
             return sendJsonResponse(res, 200, myResponse);
         })
         .catch(err => {
