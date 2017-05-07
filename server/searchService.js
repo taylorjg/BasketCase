@@ -240,6 +240,13 @@ const search = (req, res) => {
             query: {
                 match_all: {}
             },
+            sort: [
+                {
+                    "Price": {
+                        "order": "asc"
+                    }
+                }
+            ],
             _source: [
                 'Code',
                 'FitTypeName',
