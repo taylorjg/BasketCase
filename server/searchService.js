@@ -12,6 +12,28 @@ const esConfig = () => {
 
 const client = new es.Client(esConfig());
 
+const FACET_ID_FIT_TYPE = 1;
+const FACET_ID_BRAND = 2;
+const FACET_ID_COLOUR = 3;
+const FACET_ID_PRICE = 4;
+
+const FIELD_NAME_FIT_TYPE = 'FitTypeName.keyword';
+const FIELD_NAME_BRAND = 'Brand.keyword';
+const FIELD_NAME_COLOUR = 'Colour.keyword';
+const FIELD_NAME_PRICE = 'Price';
+
+const DISPLAY_NAME_FIT_TYPE = 'Fit Type';
+const DISPLAY_NAME_BRAND = 'Brand';
+const DISPLAY_NAME_COLOUR = 'Colour';
+const DISPLAY_NAME_PRICE = 'Price';
+
+const FACET_IDS_TO_FIELD_NAMES = {
+    [FACET_ID_FIT_TYPE]: FIELD_NAME_FIT_TYPE,
+    [FACET_ID_BRAND]: FIELD_NAME_BRAND,
+    [FACET_ID_COLOUR]: FIELD_NAME_COLOUR,
+    [FACET_ID_PRICE]: FIELD_NAME_PRICE,
+};
+
 const outTermFilterFor = field => f => {
     if (f.terms && f.terms[field]) return false;
     return true;
@@ -62,16 +84,16 @@ const addRangeAggregation = (aggs, activeFilters, name, field, ranges) => {
 const addAggregations = (request, filters) => {
     filters = filters || [];
     request.body.aggs = {
-        'global': {
-            'global': {},
+        global: {
+            global: {},
             aggs: {}
         }
     };
     const aggs = request.body.aggs.global.aggs;
-    addTermAggregation(aggs, filters, 'fitType', 'FitTypeName.keyword');
-    addTermAggregation(aggs, filters, 'brand', 'Brand.keyword');
-    addTermAggregation(aggs, filters, 'colour', 'Colour.keyword');
-    addRangeAggregation(aggs, filters, 'price', 'Price', [
+    addTermAggregation(aggs, filters, 'fitType', FIELD_NAME_FIT_TYPE);
+    addTermAggregation(aggs, filters, 'brand', FIELD_NAME_BRAND);
+    addTermAggregation(aggs, filters, 'colour', FIELD_NAME_COLOUR);
+    addRangeAggregation(aggs, filters, 'price', FIELD_NAME_PRICE, [
         { 'to': 200 },
         { 'from': 200, 'to': 250 },
         { 'from': 250, 'to': 300 },
@@ -155,27 +177,15 @@ const elasticsearchHitsToMyResults = (pageSize, currentPage, searchText, hits) =
 
 const elasticsearchAggsToMyFacets = aggs =>
     [].concat(
-        aggToTermsFacet(aggs.fitType.fitType, FACET_ID_FIT_TYPE, 'Fit Type'),
-        aggToTermsFacet(aggs.brand.brand, FACET_ID_BRAND, 'Brand'),
-        aggToTermsFacet(aggs.colour.colour, FACET_ID_COLOUR, 'Colour'),
-        aggToRangeFacet(aggs.price.price, FACET_ID_PRICE, 'Price', formatPriceKey));
+        aggToTermsFacet(aggs.fitType.fitType, FACET_ID_FIT_TYPE, DISPLAY_NAME_FIT_TYPE),
+        aggToTermsFacet(aggs.brand.brand, FACET_ID_BRAND, DISPLAY_NAME_BRAND),
+        aggToTermsFacet(aggs.colour.colour, FACET_ID_COLOUR, DISPLAY_NAME_COLOUR),
+        aggToRangeFacet(aggs.price.price, FACET_ID_PRICE, DISPLAY_NAME_PRICE, formatPriceKey));
 
 const elasticsearchResponseToMyResponse = (pageSize, currentPage, searchText, response) => ({
     results: elasticsearchHitsToMyResults(pageSize, currentPage, searchText, response.hits),
     facets: elasticsearchAggsToMyFacets(response.aggregations.global)
 });
-
-const FACET_ID_FIT_TYPE = 1;
-const FACET_ID_BRAND = 2;
-const FACET_ID_COLOUR = 3;
-const FACET_ID_PRICE = 4;
-
-const FACET_IDS_TO_FIELD_NAMES = {
-    [FACET_ID_FIT_TYPE]: 'FitTypeName.keyword',
-    [FACET_ID_BRAND]: 'Brand.keyword',
-    [FACET_ID_COLOUR]: 'Colour.keyword',
-    [FACET_ID_PRICE]: 'Price',
-};
 
 const myFilterToTermsFilter = filter => {
     const fieldName = FACET_IDS_TO_FIELD_NAMES[filter.facetId];
