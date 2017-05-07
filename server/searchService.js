@@ -229,7 +229,19 @@ const search = (req, res) => {
             from: pageSize * (currentPage - 1),
             query: {
                 match_all: {}
-            }
+            },
+            _source: [
+                'Code',
+                'FitTypeName',
+                'Brand',
+                'Colour',
+                'Price',
+                'FullTitle',
+                'EnergyRating',
+                'Image',
+                'ReviewCount',
+                'RatingValue'
+            ]
         }
     };
     if (searchText) {
