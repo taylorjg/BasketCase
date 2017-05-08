@@ -3,6 +3,8 @@ import './searchPanel.component';
 import './facetsPanel.component';
 import './facet.component';
 import './facetValue.component';
+import './breadcrumbsPanel.component';
+import './breadcrumb.component';
 import './resultsPanel.component';
 import './productDetails.component';
 import './search.service';

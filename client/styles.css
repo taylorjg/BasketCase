@@ -23,7 +23,6 @@ body {
 
 .facet-reset-all {
     display: block;
-    /*text-align: right;*/
     cursor: pointer;
 }
 
@@ -41,6 +40,21 @@ body {
 
 .facet-list li {
     margin: 0 0 0 5px;
+}
+
+.breadcrumb {
+    background-color: #fff;
+}
+
+.breadcrumb > li {
+    font-size: 1.1rem;
+    cursor: pointer;
+    background-color: #fff;
+    color: #ccc;
+}
+
+.breadcrumb > li + li:before {
+    content: "\00bb\00a0";
 }
 
 .results-count {
