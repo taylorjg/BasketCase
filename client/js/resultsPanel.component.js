@@ -5,26 +5,25 @@ class Controller {
     constructor($rootScope, SearchService) {
         this.SearchService = SearchService;
         this.searchText = "";
-        this.results = [];
+        this.products = [];
         this.total = 0;
         this.from = 0;
         this.to = 0;
         this.pageSize = C.RESULTS_PAGE_SIZE;
         this.numPages = 0;
         this.currentPage = 0;
-        $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.onSearchResults.bind(this));
+        $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.onSearchResultsEvent.bind(this));
     }
 
-    onSearchResults(_, response) {
-        const results = response.results;
-        this.searchText = results.searchText;
-        this.products = results.products;
-        this.total = results.total;
-        this.from = (results.pageSize * (results.currentPage - 1)) + 1;
-        this.to = Math.min((results.pageSize * results.currentPage), results.total);
-        this.pageSize = results.pageSize;
-        this.numPages = Math.ceil(results.total / results.pageSize);
-        this.currentPage = results.currentPage;
+    onSearchResultsEvent(_, { searchOptions, response }) {
+        this.searchText = searchOptions.searchText;
+        this.pageSize = searchOptions.pageSize;
+        this.numPages = Math.ceil(response.results.total / searchOptions.pageSize);
+        this.currentPage = searchOptions.currentPage;
+        this.products = response.results.products;
+        this.total = response.results.total;
+        this.from = (searchOptions.pageSize * (searchOptions.currentPage - 1)) + 1;
+        this.to = Math.min((searchOptions.pageSize * searchOptions.currentPage), response.results.total);
     }
 
     onPageChanged() {

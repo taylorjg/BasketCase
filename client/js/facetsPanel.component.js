@@ -16,11 +16,16 @@ class Controller {
         SearchService.search();
     }
 
-    onSearchResultsEvent(_, response) {
-        this.fitType = this.getFacet(response, 1);
-        this.brand = this.getFacet(response, 2);
-        this.colour = this.getFacet(response, 3);
-        this.price = this.getFacet(response, 4);
+    onSearchResultsEvent(_, { response }) {
+        this.fitType = this.getFacet(response, C.FACET_ID_FIT_TYPE);
+        this.brand = this.getFacet(response, C.FACET_ID_BRAND);
+        this.colour = this.getFacet(response, C.FACET_ID_COLOUR);
+        this.price = this.getFacet(response, C.FACET_ID_PRICE);
+    }
+
+    onResetAllFacetsEvent(_, doSearch) {
+        this.filters.clear();
+        doSearch && this.search();
     }
 
     onFacetSelectionChanged(facetId, filter) {
@@ -30,11 +35,6 @@ class Controller {
             this.filters.delete(facetId);
         }
         this.search();
-    }
-
-    onResetAllFacetsEvent(_, doSearch) {
-        this.filters.clear();
-        doSearch && this.search();
     }
 
     onResetAll() {

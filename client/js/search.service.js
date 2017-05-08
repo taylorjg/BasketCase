@@ -17,7 +17,9 @@ class SearchService {
         const url = `${C.SEARCH_SERVICE_URL}/search`;
         return this.$http
             .post(url, searchOptions)
-            .then(response => this.$rootScope.$broadcast(C.SEARCH_RESULTS_EVENT, response.data))
+            .then(response => this.$rootScope.$broadcast(C.SEARCH_RESULTS_EVENT, {
+                searchOptions,
+                response: response.data}))
             .then(() => this.lastSearchOptions = searchOptions);
     }
 

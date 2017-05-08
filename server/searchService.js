@@ -167,11 +167,8 @@ const aggToRangeFacet = (agg, id, displayName, displayNameFormatter) => ({
 
 const hitToResult = hit => hit._source;
 
-const elasticsearchHitsToMyResults = (pageSize, currentPage, searchText, hits) => ({
+const elasticsearchHitsToMyResults = hits => ({
     total: hits.total,
-    pageSize,
-    currentPage,
-    searchText,
     products: hits.hits.map(hitToResult)
 });
 
@@ -182,8 +179,8 @@ const elasticsearchAggsToMyFacets = aggs =>
         aggToTermsFacet(aggs.colour.colour, FACET_ID_COLOUR, DISPLAY_NAME_COLOUR),
         aggToRangeFacet(aggs.price.price, FACET_ID_PRICE, DISPLAY_NAME_PRICE, formatPriceKey));
 
-const elasticsearchResponseToMyResponse = (pageSize, currentPage, searchText, response) => ({
-    results: elasticsearchHitsToMyResults(pageSize, currentPage, searchText, response.hits),
+const elasticsearchResponseToMyResponse = (response) => ({
+    results: elasticsearchHitsToMyResults(response.hits),
     facets: elasticsearchAggsToMyFacets(response.aggregations.global)
 });
 
@@ -226,8 +223,8 @@ const myFiltersToElasticsearchFilters = filters =>
         .filter(f => f);
 
 const search = (req, res) => {
-    const pageSize = Number(req.body.pageSize) || 10;
-    const currentPage = Number(req.body.currentPage) || 1;
+    const pageSize = Number(req.body.pageSize);
+    const currentPage = Number(req.body.currentPage);
     const searchText = req.body.searchText || "";
     const filters = req.body.filters || [];
     const esFilters = myFiltersToElasticsearchFilters(filters);
@@ -235,8 +232,6 @@ const search = (req, res) => {
         index: 'products',
         type: 'washers',
         body: {
-            size: pageSize,
-            from: pageSize * (currentPage - 1),
             query: {
                 match_all: {}
             },
@@ -261,6 +256,10 @@ const search = (req, res) => {
             ]
         }
     };
+    if (pageSize && currentPage) {
+        request.body.size = pageSize;
+        request.body.from = pageSize * (currentPage - 1);
+    }
     if (searchText) {
         request.body.query = {
             query_string: {
@@ -277,11 +276,11 @@ const search = (req, res) => {
     }
     client.search(addAggregations(request, esFilters))
         .then(response => {
-            const myResponse = elasticsearchResponseToMyResponse(pageSize, currentPage, searchText, response);
+            const myResponse = elasticsearchResponseToMyResponse(response);
             return sendJsonResponse(res, 200, myResponse);
         })
         .catch(err => {
-            console.error(`ERROR: ${err}`);
+            console.error(`ERROR: ${err.displayName} (${err.statusCode}): ${err.message}`);
             sendStatusResponse(res, 500, err.message);
         });
 };
