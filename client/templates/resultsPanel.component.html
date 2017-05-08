@@ -2,6 +2,16 @@
 
 <ng-switch on="vm.total > 0">
     <div ng-switch-when="true">
+        <span class="pull-right">
+            <label for="sortBy">Sort By</label>
+            <select
+                id="sortBy"
+                ng-model="vm.sortBy"
+                ng-options="sortOption.text for sortOption in vm.sortOptions"
+                ng-change="vm.onSortByChanged()"
+            >
+            </select>
+        </span>
         <p class="results-count">
             Total number of matching products: {{ vm.total }}
             (showing {{ vm.from }} - {{ vm.to }})

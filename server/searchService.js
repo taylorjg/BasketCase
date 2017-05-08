@@ -27,6 +27,11 @@ const DISPLAY_NAME_BRAND = 'Brand';
 const DISPLAY_NAME_COLOUR = 'Colour';
 const DISPLAY_NAME_PRICE = 'Price';
 
+const SORT_BY_PRICE_LOW_TO_HIGH = 0;
+const SORT_BY_PRICE_HIGH_TO_LOW = 1;
+const SORT_BY_AVERAGE_RATING = 2;
+const SORT_BY_REVIEW_COUNT = 3;
+
 const FACET_IDS_TO_FIELD_NAMES = {
     [FACET_ID_FIT_TYPE]: FIELD_NAME_FIT_TYPE,
     [FACET_ID_BRAND]: FIELD_NAME_BRAND,
@@ -222,9 +227,20 @@ const myFiltersToElasticsearchFilters = filters =>
         .map(myFilterToElasticsearchFilter)
         .filter(f => f);
 
+const mySortByToElasticsearchSort = sortBy => {
+    switch (sortBy) {
+        case SORT_BY_PRICE_LOW_TO_HIGH: return { 'Price': { order: "asc"} };
+        case SORT_BY_PRICE_HIGH_TO_LOW: return { 'Price': { order: "desc"} };
+        case SORT_BY_AVERAGE_RATING: return { 'RatingValue': { order: "desc"} };
+        case SORT_BY_REVIEW_COUNT: return { 'ReviewCount': { order: "desc"} };
+        default: return null;
+    }
+};
+
 const search = (req, res) => {
     const pageSize = Number(req.body.pageSize);
     const currentPage = Number(req.body.currentPage);
+    const sortBy = Number(req.body.sortBy) || 0;
     const searchText = req.body.searchText || "";
     const filters = req.body.filters || [];
     const esFilters = myFiltersToElasticsearchFilters(filters);
@@ -235,13 +251,6 @@ const search = (req, res) => {
             query: {
                 match_all: {}
             },
-            sort: [
-                {
-                    "Price": {
-                        "order": "asc"
-                    }
-                }
-            ],
             _source: [
                 'Code',
                 'FitTypeName',
@@ -259,6 +268,10 @@ const search = (req, res) => {
     if (pageSize && currentPage) {
         request.body.size = pageSize;
         request.body.from = pageSize * (currentPage - 1);
+    }
+    const sort = mySortByToElasticsearchSort(sortBy);
+    if (sort) {
+        request.body.sort = sort;
     }
     if (searchText) {
         request.body.query = {

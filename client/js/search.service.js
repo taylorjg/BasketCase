@@ -12,8 +12,11 @@ class SearchService {
         // TODO: protect against multiple in-flight searches (e.g. add a flag)
 
         searchOptions = searchOptions || {};
-        searchOptions.pageSize = searchOptions.pageSize || C.RESULTS_PAGE_SIZE;
+        searchOptions.pageSize = searchOptions.pageSize || C.DEFAULT_PAGE_SIZE;
         searchOptions.currentPage = searchOptions.currentPage || 1;
+        searchOptions.sortBy = Number.isInteger(searchOptions.sortBy)
+            ? searchOptions.sortBy
+            : C.DEFAULT_SORT_BY.value;
         const url = `${C.SEARCH_SERVICE_URL}/search`;
         return this.$http
             .post(url, searchOptions)
@@ -21,6 +24,12 @@ class SearchService {
                 searchOptions,
                 response: response.data}))
             .then(() => this.lastSearchOptions = searchOptions);
+    }
+
+    changeSortBy(sortBy) {
+        const searchOptions = Object.assign({}, this.lastSearchOptions);
+        searchOptions.sortBy = sortBy;
+        this.search(searchOptions);
     }
 
     changePage(pageSize, currentPage) {
