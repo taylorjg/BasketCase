@@ -1,6 +1,6 @@
 {
   "name": "basketcase",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Simple online store app as a vehicle for experimenting with Elasticsearch",
   "main": "server/app.js",
   "scripts": {

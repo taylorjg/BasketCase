@@ -29,6 +29,7 @@ class SearchService {
     changeSortBy(sortBy) {
         const searchOptions = Object.assign({}, this.lastSearchOptions);
         searchOptions.sortBy = sortBy;
+        searchOptions.currentPage = 1;
         this.search(searchOptions);
     }
 
