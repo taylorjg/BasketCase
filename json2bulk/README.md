@@ -27,7 +27,7 @@ I want each object to be a document in my Elasticsearch database. I wrote this b
 {"Code":"EWD81482W_WH","ColourId":37193,...
 ```
 
-Locally, I am using Elasticsearch version 5.3.1. However, I also deploy the app to Heroku where I have use the [Bonasi Elasticsearch](https://elements.heroku.com/addons/bonsai) add-on which is version 2.4.0. After some experimentation, I found that I needed to explicitly map some fields in order to successfully bulk load all the documents on both versions. I used the following request to create my mapping:
+Locally, I am using Elasticsearch version 5.3.1. However, I also deploy the app to Heroku where I use the [Bonasi Elasticsearch](https://elements.heroku.com/addons/bonsai) add-on which is version 2.4.0. After some experimentation, I found that I needed to explicitly map some fields in order to successfully bulk load all the documents on both versions. I used the following request to create my mapping:
 
 ```
 PUT /products
@@ -79,7 +79,7 @@ PUT /products
 }
 ```
 
-I then used the following request to bulk load the documents:
+I then used the following command to bulk load the documents:
 
 ```
 curl -XPOST localhost:9200/products/washers/_bulk?pretty --data-binary @bulk.json > bulk_response.json
