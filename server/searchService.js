@@ -131,45 +131,51 @@ const formatPriceKey = bucket => {
     return bucket.key;
 };
 
-const bucketToCommonFacetValue = (bucket, index, displayNameFormatter) => ({
+const bucketToCommonFacetValue = (filter, bucket, index, displayNameFormatter) => ({
     index: index,
     displayName: (displayNameFormatter || defaultDisplayNameFormatter)(bucket),
     key: bucket.key,
     count: bucket.doc_count,
-    selected: bucket.doc_count > 5
+    selected: !!(filter && filter.keys.find(k => k === bucket.key))
 });
 
-const bucketToTermsFacetValue = displayNameFormatter => (bucket, index) =>
-    bucketToCommonFacetValue(bucket, index, displayNameFormatter);
+const bucketToTermsFacetValue = (filter, displayNameFormatter) => (bucket, index) =>
+    bucketToCommonFacetValue(filter, bucket, index, displayNameFormatter);
 
-const bucketToRangeFacetValue = displayNameFormatter => (bucket, index) => {
-    const facetValue = bucketToCommonFacetValue(bucket, index, displayNameFormatter);
+const bucketToRangeFacetValue = (filter, displayNameFormatter) => (bucket, index) => {
+    const facetValue = bucketToCommonFacetValue(filter, bucket, index, displayNameFormatter);
     facetValue.from = bucket.from;
     facetValue.to = bucket.to;
     return facetValue;
 };
 
-const bucketsToTermsFacetValues = (buckets, displayNameFormatter) =>
-    buckets.map(bucketToTermsFacetValue(displayNameFormatter));
+const bucketsToTermsFacetValues = (filter, buckets, displayNameFormatter) =>
+    buckets.map(bucketToTermsFacetValue(filter, displayNameFormatter));
 
-const bucketsToRangeFacetValues = (buckets, displayNameFormatter) =>
+const bucketsToRangeFacetValues = (filter, buckets, displayNameFormatter) =>
     buckets
         .filter(bucket => bucket.doc_count)
-        .map(bucketToRangeFacetValue(displayNameFormatter));
+        .map(bucketToRangeFacetValue(filter, displayNameFormatter));
 
-const aggToTermsFacet = (agg, id, displayName, displayNameFormatter) => ({
-    id,
-    isRange: false,
-    displayName,
-    facetValues: bucketsToTermsFacetValues(agg.buckets, displayNameFormatter)
-});
+const aggToTermsFacet = (filters, agg, id, displayName, displayNameFormatter) => {
+    const filter = filters.find(f => f.facetId === id);
+    return {
+        id,
+        isRange: false,
+        displayName,
+        facetValues: bucketsToTermsFacetValues(filter, agg.buckets, displayNameFormatter)
+    };
+};
 
-const aggToRangeFacet = (agg, id, displayName, displayNameFormatter) => ({
-    id,
-    isRange: true,
-    displayName,
-    facetValues: bucketsToRangeFacetValues(agg.buckets, displayNameFormatter)
-});
+const aggToRangeFacet = (filters, agg, id, displayName, displayNameFormatter) => {
+    const filter = filters.find(f => f.facetId === id);
+    return {
+        id,
+        isRange: true,
+        displayName,
+        facetValues: bucketsToRangeFacetValues(filter, agg.buckets, displayNameFormatter)
+    };
+};
 
 const hitToResult = hit => hit._source;
 
@@ -178,16 +184,16 @@ const elasticsearchHitsToMyResults = hits => ({
     products: hits.hits.map(hitToResult)
 });
 
-const elasticsearchAggsToMyFacets = aggs =>
+const elasticsearchAggsToMyFacets = (aggs, filters) =>
     [].concat(
-        aggToTermsFacet(aggs.fitType.fitType, FACET_ID_FIT_TYPE, DISPLAY_NAME_FIT_TYPE),
-        aggToTermsFacet(aggs.brand.brand, FACET_ID_BRAND, DISPLAY_NAME_BRAND),
-        aggToTermsFacet(aggs.colour.colour, FACET_ID_COLOUR, DISPLAY_NAME_COLOUR),
-        aggToRangeFacet(aggs.price.price, FACET_ID_PRICE, DISPLAY_NAME_PRICE, formatPriceKey));
+        aggToTermsFacet(filters, aggs.fitType.fitType, FACET_ID_FIT_TYPE, DISPLAY_NAME_FIT_TYPE),
+        aggToTermsFacet(filters, aggs.brand.brand, FACET_ID_BRAND, DISPLAY_NAME_BRAND),
+        aggToTermsFacet(filters, aggs.colour.colour, FACET_ID_COLOUR, DISPLAY_NAME_COLOUR),
+        aggToRangeFacet(filters, aggs.price.price, FACET_ID_PRICE, DISPLAY_NAME_PRICE, formatPriceKey));
 
-const elasticsearchResponseToMyResponse = (response) => ({
+const elasticsearchResponseToMyResponse = (response, filters) => ({
     results: elasticsearchHitsToMyResults(response.hits),
-    facets: elasticsearchAggsToMyFacets(response.aggregations.global)
+    facets: elasticsearchAggsToMyFacets(response.aggregations.global, filters)
 });
 
 const myFilterToTermsFilter = filter => {
@@ -230,10 +236,10 @@ const myFiltersToElasticsearchFilters = filters =>
 
 const mySortByToElasticsearchSort = sortBy => {
     switch (sortBy) {
-        case SORT_BY_PRICE_LOW_TO_HIGH: return { 'Price': { order: "asc"} };
-        case SORT_BY_PRICE_HIGH_TO_LOW: return { 'Price': { order: "desc"} };
-        case SORT_BY_AVERAGE_RATING: return { 'RatingValue': { order: "desc"} };
-        case SORT_BY_REVIEW_COUNT: return { 'ReviewCount': { order: "desc"} };
+        case SORT_BY_PRICE_LOW_TO_HIGH: return { 'Price': { order: "asc" } };
+        case SORT_BY_PRICE_HIGH_TO_LOW: return { 'Price': { order: "desc" } };
+        case SORT_BY_AVERAGE_RATING: return { 'RatingValue': { order: "desc" } };
+        case SORT_BY_REVIEW_COUNT: return { 'ReviewCount': { order: "desc" } };
         default: return null;
     }
 };
@@ -290,11 +296,15 @@ const search = (req, res) => {
     }
     client.search(addAggregations(request, esFilters))
         .then(response => {
-            const myResponse = elasticsearchResponseToMyResponse(response);
+            const myResponse = elasticsearchResponseToMyResponse(response, filters);
             return sendJsonResponse(res, 200, myResponse);
         })
         .catch(err => {
-            console.error(`ERROR: ${err.displayName} (${err.statusCode}): ${err.message}`);
+            if (err.displayName && err.statusCode) {
+                console.error(`ERROR: ${err.displayName} (${err.statusCode}) ${err.message}`);
+            } else {
+                console.error(`ERROR: ${err.message}`);
+            }
             sendStatusResponse(res, 500, err.message);
         });
 };

@@ -25,6 +25,10 @@ class Controller {
         this.facet.facetValues.forEach(v => v.selected = false);
     }
 
+    anythingSelected() {
+        return this.facet.facetValues && this.facet.facetValues.some(v => v.selected);
+    }
+
     buildFilter() {
         const selectedValues = this.facet.facetValues.filter(v => v.selected);
         return this.facet.isRange
@@ -48,6 +52,7 @@ class Controller {
             ? {
                 type: 'range',
                 facetId: this.facet.id,
+                keys: [selectedValue.key],
                 from: selectedValue.from,
                 to: selectedValue.to
             }
