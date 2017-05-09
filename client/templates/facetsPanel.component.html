@@ -1,5 +1,7 @@
-<a class="facet-reset-all" ng-show="vm.filters.size" ng-click="vm.onResetAll()">Reset All</a>
-<facet facet="vm.fitType" on-facet-selection-changed="vm.onFacetSelectionChanged(facetId, filter)"></facet>
-<facet facet="vm.brand" on-facet-selection-changed="vm.onFacetSelectionChanged(facetId, filter)"></facet>
-<facet facet="vm.colour" on-facet-selection-changed="vm.onFacetSelectionChanged(facetId, filter)"></facet>
-<facet facet="vm.price" on-facet-selection-changed="vm.onFacetSelectionChanged(facetId, filter)"></facet>
+<a class="facet-reset-all" ng-show="vm.anythingSelected()" ng-click="vm.onResetAll()">Reset All</a>
+
+<facet
+    ng-repeat="facet in vm.facets"
+    facet="facet"
+    on-facet-selection-changed="vm.onFacetSelectionChanged()">
+</facet>

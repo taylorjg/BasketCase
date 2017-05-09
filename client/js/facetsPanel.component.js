@@ -5,21 +5,14 @@ class Controller {
     constructor($rootScope, SearchService) {
         this.$rootScope = $rootScope;
         this.SearchService = SearchService;
-        this.fitType = [];
-        this.brand = [];
-        this.colour = [];
-        this.price = [];
-        this.filters = new Map();
+        this.facets = [];
         $rootScope.$on(C.SEARCH_RESULTS_EVENT, this.onSearchResultsEvent.bind(this));
         $rootScope.$on(C.RESET_ALL_FACETS_EVENT, this.onResetAllFacetsEvent.bind(this));
         SearchService.search();
     }
 
     onSearchResultsEvent(_, { response }) {
-        this.fitType = this.getFacet(response, C.FACET_ID_FIT_TYPE);
-        this.brand = this.getFacet(response, C.FACET_ID_BRAND);
-        this.colour = this.getFacet(response, C.FACET_ID_COLOUR);
-        this.price = this.getFacet(response, C.FACET_ID_PRICE);
+        this.facets = response.facets;
     }
 
     onResetAllFacetsEvent(_, doSearch) {
@@ -27,12 +20,7 @@ class Controller {
         doSearch && this.search();
     }
 
-    onFacetSelectionChanged(facetId, filter) {
-        if (filter) {
-            this.filters.set(facetId, filter);
-        } else {
-            this.filters.delete(facetId);
-        }
+    onFacetSelectionChanged() {
         this.search();
     }
 
@@ -40,14 +28,50 @@ class Controller {
         this.$rootScope.$broadcast(C.RESET_ALL_FACETS_EVENT, true);
     }
 
+    anythingSelected() {
+        return this.facets.some(f => f.facetValues.some(v => v.selected));
+    }
+
     search() {
-        const filters = Array.from(this.filters.values());
+        const filters = this.buildFilters();
         const searchOptions = { filters, currentPage: 1 };
         this.SearchService.search(searchOptions);
     }
 
-    getFacet(response, id) {
-        return response.facets.find(f => f.id === id);
+    buildFilters() {
+        return this.facets
+            .map(this.buildFilter.bind(this))
+            .filter(f => f);
+    }
+
+    buildFilter(facet) {
+        const selectedValues = facet.facetValues.filter(v => v.selected);
+        return facet.isRange
+            ? this.rangeFilter(facet, selectedValues)
+            : this.termsFilter(facet, selectedValues);
+    }
+
+    termsFilter(facet, selectedValues) {
+        return selectedValues.length
+            ? {
+                type: 'terms',
+                facetId: facet.id,
+                keys: selectedValues.map(v => v.key)
+            }
+            : null;
+    }
+
+    rangeFilter(facet, selectedValues) {
+        const selectedValue = selectedValues.length === 1 ? selectedValues[0] : null;
+        return selectedValue
+            ? {
+                type: 'range',
+                facetId: facet.id,
+                keys: [selectedValue.key],
+                from: selectedValue.from,
+                to: selectedValue.to
+            }
+            : null;
     }
 }
 
