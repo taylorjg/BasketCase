@@ -4,69 +4,46 @@ import * as C from './constants';
 class Controller {
     constructor($rootScope, SearchService) {
         this.SearchService = SearchService;
-        this.selectedValues = [];
         $rootScope.$on(C.RESET_ALL_FACETS_EVENT, this.onResetAllFacetsEvent.bind(this));
     }
 
-    $onChanges() {
-        const valueWasPreviouslySelected = nv => this.selectedValues.find(ov => nv.key === ov.key);
-        this.selectedValues = this.selectedValues.filter(v => v.selected);
-        if (this.facet && this.facet.facetValues) {
-            const oldSelectedValuesCount = this.selectedValues.length;
-            this.selectedValues = this.facet.facetValues.filter(valueWasPreviouslySelected);
-            this.selectedValues.forEach(v => v.selected = true);
-            const newSelectedValuesCount = this.selectedValues.length;
-            if (newSelectedValuesCount < oldSelectedValuesCount) {
-                const filter = this.buildFilter();
-                this.onFacetSelectionChanged({ facetId: this.facet.id, filter });
-            }
-        }
+    onResetAllFacetsEvent() {
+        this.deselectAll();
     }
 
-    onChange(value) {
-        if (value.selected) {
-            if (this.facet.isRange) {
-                this.selectedValues.forEach(v => v.selected = false);
-                this.selectedValues = [value];
-            } else {
-                this.selectedValues.push(value);
-            }
-        } else {
-            this.selectedValues = this.selectedValues.filter(v => v !== value);
-        }
+    onChange() {
         const filter = this.buildFilter();
         this.onFacetSelectionChanged({ facetId: this.facet.id, filter });
     }
 
     onReset() {
-        this.selectedValues.forEach(v => v.selected = false);
-        this.selectedValues = [];
+        this.deselectAll();
         this.onFacetSelectionChanged({ facetId: this.facet.id, filter: null });
     }
 
-    onResetAllFacetsEvent() {
-        this.selectedValues.forEach(v => v.selected = false);
-        this.selectedValues = [];
+    deselectAll() {
+        this.facet.facetValues.forEach(v => v.selected = false);
     }
 
     buildFilter() {
+        const selectedValues = this.facet.facetValues.filter(v => v.selected);
         return this.facet.isRange
-            ? this.rangeFilter()
-            : this.termsFilter();
+            ? this.rangeFilter(selectedValues)
+            : this.termsFilter(selectedValues);
     }
 
-    termsFilter() {
-        return this.selectedValues.length
+    termsFilter(selectedValues) {
+        return selectedValues.length
             ? {
                 type: 'terms',
                 facetId: this.facet.id,
-                keys: this.selectedValues.map(sv => sv.key)
+                keys: selectedValues.map(v => v.key)
             }
             : null;
     }
 
-    rangeFilter() {
-        const selectedValue = this.selectedValues.length === 1 ? this.selectedValues[0] : null;
+    rangeFilter(selectedValues) {
+        const selectedValue = selectedValues.length === 1 ? selectedValues[0] : null;
         return selectedValue
             ? {
                 type: 'range',
