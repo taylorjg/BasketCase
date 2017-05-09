@@ -1,35 +1,27 @@
 import app from './app.module';
-import * as C from './constants';
 
 class Controller {
-    constructor($rootScope, SearchService) {
-        this.SearchService = SearchService;
-        $rootScope.$on(C.RESET_ALL_FACETS_EVENT, this.onResetAllFacetsEvent.bind(this));
-    }
-
-    onResetAllFacetsEvent() {
-        this.deselectAll();
+    constructor() {
     }
 
     onReset() {
-        this.deselectAll();
+        this.facet.facetValues.forEach(v => v.selected = false);
         this.onFacetSelectionChanged();
     }
 
-    onChange() {
+    onChange(value) {
+        if (this.facet.isRange) {
+            this.facet.facetValues.forEach(v => v.selected = v === value);
+        }
         this.onFacetSelectionChanged();
     }
 
     anythingSelected() {
         return this.facet.facetValues.some(v => v.selected);
     }
-
-    deselectAll() {
-        this.facet.facetValues.forEach(v => v.selected = false);
-    }
 }
 
-Controller.$inject = ['$rootScope', 'SearchService'];
+Controller.$inject = [];
 
 const facet = {
     selector: 'facet',

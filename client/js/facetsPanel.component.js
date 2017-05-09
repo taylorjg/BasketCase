@@ -16,7 +16,7 @@ class Controller {
     }
 
     onResetAllFacetsEvent(_, doSearch) {
-        this.filters.clear();
+        this.facets.forEach(f => f.facetValues.forEach(v => v.selected = false));
         doSearch && this.search();
     }
 
@@ -55,7 +55,7 @@ class Controller {
         return selectedValues.length
             ? {
                 type: 'terms',
-                facetId: facet.id,
+                facetId: facet.facetId,
                 keys: selectedValues.map(v => v.key)
             }
             : null;
@@ -66,7 +66,7 @@ class Controller {
         return selectedValue
             ? {
                 type: 'range',
-                facetId: facet.id,
+                facetId: facet.facetId,
                 keys: [selectedValue.key],
                 from: selectedValue.from,
                 to: selectedValue.to
