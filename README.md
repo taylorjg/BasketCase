@@ -15,7 +15,7 @@ A little Angular 1.x app as a vehicle for grokking Elasticsearch. It supports th
 
 ## TODO
 
-* sorting of results by various criteria
+* ~~sorting of results by various criteria~~
 * autocompletion in the search box
 * breadcrumbs
 * deep linking
