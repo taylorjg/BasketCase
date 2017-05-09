@@ -49,7 +49,10 @@ class Controller {
 
     getFacet(response, id) {
         const f = response.facets.find(f => f.id === id);
-        f.facetValues.forEach(v => v.text = this.$sce.trustAsHtml(`${v.displayName} (${v.count})`));
+        f.facetValues.forEach((v, index) => {
+            v.index = index;
+            v.text = this.$sce.trustAsHtml(`${v.displayName} (${v.count})`);
+        });
         return f;
     }
 }

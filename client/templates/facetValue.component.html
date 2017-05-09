@@ -2,18 +2,18 @@
     <ng-switch on="vm.isRange">
         <input ng-switch-when="true"
             type="radio"
-            id="facet{{ vm.facetId }}-value{{ vm.value.id }}"
-            name="{{ vm.id }}"
+            id="facet{{ vm.facetId }}-value{{ vm.value.index }}"
+            name="facet{{ vm.facetId }}"
             ng-value="true"
             ng-model="vm.value.selected"
             ng-change="vm.onChange({value: vm.value})"
         >
         <input ng-switch-default
             type="checkbox"
-            id="facet{{ vm.facetId }}-value{{ vm.value.id }}"
+            id="facet{{ vm.facetId }}-value{{ vm.value.index }}"
             ng-model="vm.value.selected"
             ng-change="vm.onChange({value: vm.value})"
         >
     </ng-switch>
-    <label for="facet{{ vm.facetId }}-value{{ vm.value.id }}" ng-bind-html="vm.value.text" />
+    <label for="facet{{ vm.facetId }}-value{{ vm.value.index }}" ng-bind-html="vm.value.text" />
 </div>

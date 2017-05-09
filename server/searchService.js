@@ -131,21 +131,20 @@ const formatPriceKey = bucket => {
     return bucket.key;
 };
 
-const bucketToCommonFacetValue = (bucket, index, displayNameFormatter) => ({
-    id: index,
+const bucketToCommonFacetValue = (bucket, displayNameFormatter) => ({
     displayName: (displayNameFormatter || defaultDisplayNameFormatter)(bucket),
     key: bucket.key,
     count: bucket.doc_count
 });
 
-const bucketToTermsFacetValue = displayNameFormatter => (bucket, index) =>
-    bucketToCommonFacetValue(bucket, index, displayNameFormatter);
+const bucketToTermsFacetValue = displayNameFormatter => bucket =>
+    bucketToCommonFacetValue(bucket, displayNameFormatter);
 
-const bucketToRangeFacetValue = displayNameFormatter => (bucket, index) => {
-    const facet = bucketToCommonFacetValue(bucket, index, displayNameFormatter);
-    facet.from = bucket.from;
-    facet.to = bucket.to;
-    return facet;
+const bucketToRangeFacetValue = displayNameFormatter => bucket => {
+    const facetValue = bucketToCommonFacetValue(bucket, displayNameFormatter);
+    facetValue.from = bucket.from;
+    facetValue.to = bucket.to;
+    return facetValue;
 };
 
 const bucketsToTermsFacetValues = (buckets, displayNameFormatter) =>
