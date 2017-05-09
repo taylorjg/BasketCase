@@ -15,5 +15,5 @@
             ng-change="vm.onChange({value: vm.value})"
         >
     </ng-switch>
-    <label for="facet{{ vm.facetId }}-value{{ vm.value.index }}" ng-bind-html="vm.value.text" />
+    <label for="facet{{ vm.facetId }}-value{{ vm.value.index }}" ng-bind-html="vm.getLabel()" />
 </div>

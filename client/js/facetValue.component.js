@@ -1,11 +1,16 @@
 import app from './app.module';
 
 class Controller {
-    constructor() {
+    constructor($sce) {
+        this.$sce = $sce;
+    }
+
+    getLabel() {
+        return this.$sce.trustAsHtml(`${this.value.displayName} (${this.value.count})`);
     }
 }
 
-Controller.$inject = [];
+Controller.$inject = ['$sce'];
 
 const facetValue = {
     selector: 'facetValue',

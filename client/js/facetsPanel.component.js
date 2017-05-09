@@ -2,9 +2,8 @@ import app from './app.module';
 import * as C from './constants';
 
 class Controller {
-    constructor($rootScope, $sce, SearchService) {
+    constructor($rootScope, SearchService) {
         this.$rootScope = $rootScope;
-        this.$sce = $sce;
         this.SearchService = SearchService;
         this.fitType = [];
         this.brand = [];
@@ -48,16 +47,11 @@ class Controller {
     }
 
     getFacet(response, id) {
-        const f = response.facets.find(f => f.id === id);
-        f.facetValues.forEach((v, index) => {
-            v.index = index;
-            v.text = this.$sce.trustAsHtml(`${v.displayName} (${v.count})`);
-        });
-        return f;
+        return response.facets.find(f => f.id === id);
     }
 }
 
-Controller.$inject = ['$rootScope', '$sce', 'SearchService'];
+Controller.$inject = ['$rootScope', 'SearchService'];
 
 const facetsPanel = {
     selector: 'facetsPanel',

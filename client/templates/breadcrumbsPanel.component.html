@@ -1,3 +1,5 @@
 <ol class="breadcrumb">
-    <li ng-repeat="breadcrumb in vm.breadcrumbs"><span ng-bind-html="breadcrumb.text" /></li>
+    <li ng-repeat="breadcrumb in vm.breadcrumbs">
+        <breadcrumb breadcrumb="breadcrumb"></breadcrumb>
+    </li>
 </ol>
