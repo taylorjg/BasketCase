@@ -84,3 +84,4 @@ I then used the following command to bulk load the documents:
 ```
 curl -XPOST localhost:9200/products/washers/_bulk?pretty --data-binary @bulk.json > bulk_response.json
 ```
+UPDATE: I just found this: [Supported Elasticsearch Versions](https://docs.bonsai.io/docs/supported-elasticsearch-versions)
