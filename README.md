@@ -71,7 +71,7 @@ end point, `/api/search`.
         ]
     },
     "facets": [{
-        "id": 1,
+        "facetId": 1,
         "isRange": false,
         "displayName": "Fit Type",
         "facetValues": [{
@@ -86,7 +86,7 @@ end point, `/api/search`.
             "count": 1
         }]
     }, {
-        "id": 2,
+        "facetId": 2,
         "isRange": false,
         "displayName": "Brand",
         "facetValues": [{
@@ -105,7 +105,7 @@ end point, `/api/search`.
         ...
         ]
     }, {
-        "id": 3,
+        "facetId": 3,
         "isRange": false,
         "displayName": "Colour",
         "facetValues": [{
@@ -125,7 +125,7 @@ end point, `/api/search`.
             "count": 1
         }]
     }, {
-        "id": 4,
+        "facetId": 4,
         "isRange": true,
         "displayName": "Price",
         "facetValues": [{
