@@ -30,38 +30,22 @@ const bucketsToRangeFacetValues = (filter, buckets, displayNameFormatter) =>
         .filter(bucket => bucket.doc_count)
         .map(bucketToRangeFacetValue(filter, displayNameFormatter));
 
-const aggToTermsFacet = (filters, agg, facetId, displayName, displayNameFormatter) => {
-    const filter = filters.find(f => f.facetId === facetId);
-    return {
-        facetId,
-        isRange: false,
-        displayName,
-        facetValues: bucketsToTermsFacetValues(filter, agg.buckets, displayNameFormatter)
-    };
-};
-
-const aggToRangeFacet = (filters, agg, facetId, displayName, displayNameFormatter) => {
-    const filter = filters.find(f => f.facetId === facetId);
-    return {
-        facetId,
-        isRange: true,
-        displayName,
-        facetValues: bucketsToRangeFacetValues(filter, agg.buckets, displayNameFormatter)
-    };
-};
-
-const hitToResult = hit => hit._source;
-
 const elasticsearchHitsToMyResults = hits => ({
     total: hits.total,
-    products: hits.hits.map(hitToResult)
+    products: hits.hits.map(hit => hit._source)
 });
 
 const elasticsearchAggsToMyFacets = (aggs, filters) => {
     const myFacets = fd.FACET_DEFINITIONS.map(fd => {
+        const filter = filters && filters.find(f => f.facetId === fd.facetId);
         const agg = aggs[fd.aggregationName][fd.aggregationName];
-        const aggToFacetFn = fd.isRange ? aggToRangeFacet : aggToTermsFacet;
-        return aggToFacetFn(filters, agg, fd.facetId, fd.displayName, fd.displayNameFormatter);
+        const bucketsToFacetValuesFn = fd.isRange ? bucketsToRangeFacetValues : bucketsToTermsFacetValues;
+        return {
+            facetId: fd.facetId,
+            isRange: fd.isRange,
+            displayName: fd.displayName,
+            facetValues: bucketsToFacetValuesFn(filter, agg.buckets, fd.displayNameFormatter)
+        };
     });
     return Array.prototype.concat.apply([], myFacets);
 };
