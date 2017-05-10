@@ -1,5 +1,3 @@
-'use strict';
-
 const priceDisplayNameFormatter = bucket => {
     const gotFrom = Number.isInteger(bucket.from);
     const gotTo = Number.isInteger(bucket.to);
