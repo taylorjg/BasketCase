@@ -1,6 +1,4 @@
 import { expect } from 'chai';
-import '../js/app';
-import 'angular-mocks';
 
 const angular = window.angular;
 
