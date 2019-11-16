@@ -1,6 +1,6 @@
 {
   "name": "basketcase",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Simple online store app as a vehicle for experimenting with Elasticsearch",
   "main": "server/app.js",
   "scripts": {
@@ -34,6 +34,7 @@
   "dependencies": {
     "angular": "^1.6.4",
     "angular-ui-bootstrap": "^2.5.0",
+    "axios": "^0.19.0",
     "body-parser": "^1.17.1",
     "elasticsearch": "^13.0.0",
     "express": "^4.15.2"

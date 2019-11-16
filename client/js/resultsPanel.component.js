@@ -18,15 +18,15 @@ class Controller {
     }
 
     onSearchResultsEvent(_, { searchOptions, response }) {
+        this.total = response.results.total.value || response.results.total;
         this.sortBy = this.lookupSortOption(searchOptions.sortBy);
         this.searchText = searchOptions.searchText;
         this.pageSize = searchOptions.pageSize;
-        this.numPages = Math.ceil(response.results.total / searchOptions.pageSize);
+        this.numPages = Math.ceil(this.total / searchOptions.pageSize);
         this.currentPage = searchOptions.currentPage;
         this.products = response.results.products;
-        this.total = response.results.total;
         this.from = (searchOptions.pageSize * (searchOptions.currentPage - 1)) + 1;
-        this.to = Math.min((searchOptions.pageSize * searchOptions.currentPage), response.results.total);
+        this.to = Math.min((searchOptions.pageSize * searchOptions.currentPage), this.total);
     }
 
     onSortByChanged() {

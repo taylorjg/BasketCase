@@ -19,7 +19,7 @@ module.exports = {
             { context: './client', from: '*.html' },
             { context: './client', from: '*.css' },
             { context: './client', from: 'templates/**/*.html' },
-            { context: './client', from: 'assets/**/*.{png,gif}' }
+            { context: './client', from: 'assets/**/*.{png,gif,jpg}' }
         ]),
         new HtmlWebpackPlugin({
             template: './client/index.html',
