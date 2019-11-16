@@ -43,4 +43,4 @@ class SearchService {
 
 SearchService.$inject = ['$rootScope', '$http'];
 
-app.service(SearchService.name, SearchService);
+app.service('SearchService', SearchService);
