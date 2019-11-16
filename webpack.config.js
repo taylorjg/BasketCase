@@ -6,10 +6,7 @@ const packageJson = require('./package.json');
 const serverPublic = path.join(__dirname, 'server', 'public');
 
 module.exports = {
-    entry: [
-        'babel-polyfill',
-        './client/js/app.js'
-    ],
+    entry: './client/js/app.js',
     output: {
         path: serverPublic,
         filename: 'bundle.js',
@@ -33,11 +30,6 @@ module.exports = {
                 exclude: /node_modules/,
                 use: 'eslint-loader',
                 enforce: 'pre'
-            },
-            {
-                test: /\.(js)$/,
-                exclude: /node_modules/,
-                use: 'babel-loader'
             }
         ]
     },
