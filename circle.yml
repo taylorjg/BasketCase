@@ -1,5 +1,0 @@
-deployment:
-  heroku:
-    branch: master
-    heroku:
-      appname: basketcasestore
