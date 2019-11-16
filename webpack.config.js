@@ -23,16 +23,6 @@ module.exports = {
             version: packageJson.version
         })
     ],
-    module: {
-        rules: [
-            {
-                test: /\.(js)$/,
-                exclude: /node_modules/,
-                use: 'eslint-loader',
-                enforce: 'pre'
-            }
-        ]
-    },
     devtool: 'source-map',
     devServer: {
         contentBase: serverPublic,
