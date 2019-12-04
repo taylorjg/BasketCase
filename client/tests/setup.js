@@ -1,2 +1,2 @@
-import '../js/app';
-import 'angular-mocks';
+import '../js/app'
+import 'angular-mocks'

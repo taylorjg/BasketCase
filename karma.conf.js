@@ -12,5 +12,5 @@ module.exports = config => {
     reporters: ['spec'],
     autoWatch: false,
     singleRun: true
-  });
-};
+  })
+}

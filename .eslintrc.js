@@ -8,7 +8,6 @@ module.exports = {
     es6: true
   },
   rules: {
-    semi: 2,
     'no-console': 0
   }
 }

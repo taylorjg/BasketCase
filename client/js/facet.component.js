@@ -1,37 +1,37 @@
-import app from './app.module';
+import app from './app.module'
 
 class Controller {
-    constructor() {
-    }
+  constructor() {
+  }
 
-    onReset() {
-        this.facet.facetValues.forEach(v => v.selected = false);
-        this.onFacetSelectionChanged();
-    }
+  onReset() {
+    this.facet.facetValues.forEach(v => v.selected = false)
+    this.onFacetSelectionChanged()
+  }
 
-    onChange(value) {
-        if (this.facet.isRange) {
-            this.facet.facetValues.forEach(v => v.selected = v === value);
-        }
-        this.onFacetSelectionChanged();
+  onChange(value) {
+    if (this.facet.isRange) {
+      this.facet.facetValues.forEach(v => v.selected = v === value)
     }
+    this.onFacetSelectionChanged()
+  }
 
-    anythingSelected() {
-        return this.facet.facetValues.some(v => v.selected);
-    }
+  anythingSelected() {
+    return this.facet.facetValues.some(v => v.selected)
+  }
 }
 
-Controller.$inject = [];
+Controller.$inject = []
 
 const facet = {
-    selector: 'facet',
-    templateUrl: 'templates/facet.component.html',
-    bindings: {
-        facet: '<',
-        onFacetSelectionChanged: '&'
-    },
-    controller: Controller,
-    controllerAs: 'vm'
-};
+  selector: 'facet',
+  templateUrl: 'templates/facet.component.html',
+  bindings: {
+    facet: '<',
+    onFacetSelectionChanged: '&'
+  },
+  controller: Controller,
+  controllerAs: 'vm'
+}
 
-app.component(facet.selector, facet);
+app.component(facet.selector, facet)

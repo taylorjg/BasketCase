@@ -1,25 +1,25 @@
-const expect = require('chai').expect;
+const expect = require('chai').expect
 
 describe('my2es tests', () => {
 
-    describe('#myFiltersToElasticsearchFilters', () => {
+  describe('#myFiltersToElasticsearchFilters', () => {
 
-        it('test 1', () => {
-            expect([]).to.be.empty;
-        });
-    });
+    it('test 1', () => {
+      expect([]).to.be.empty
+    })
+  })
 
-    describe('#mySortByToElasticsearchSort', () => {
+  describe('#mySortByToElasticsearchSort', () => {
 
-        it('test 1', () => {
-            expect([]).to.be.empty;
-        });
-    });
+    it('test 1', () => {
+      expect([]).to.be.empty
+    })
+  })
 
-    describe('#addAggregationsToRequest', () => {
+  describe('#addAggregationsToRequest', () => {
 
-        it('test 1', () => {
-            expect([]).to.be.empty;
-        });
-    });
-});
+    it('test 1', () => {
+      expect([]).to.be.empty
+    })
+  })
+})

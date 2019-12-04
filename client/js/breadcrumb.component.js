@@ -1,20 +1,20 @@
-import app from './app.module';
+import app from './app.module'
 
 class Controller {
-    constructor() {
-    }
+  constructor() {
+  }
 }
 
-Controller.$inject = [];
+Controller.$inject = []
 
 const breadcrumb = {
-    selector: 'breadcrumb',
-    templateUrl: 'templates/breadcrumb.component.html',
-    bindings: {
-        breadcrumb: '<'
-    },
-    controller: Controller,
-    controllerAs: 'vm'
-};
+  selector: 'breadcrumb',
+  templateUrl: 'templates/breadcrumb.component.html',
+  bindings: {
+    breadcrumb: '<'
+  },
+  controller: Controller,
+  controllerAs: 'vm'
+}
 
-app.component(breadcrumb.selector, breadcrumb);
+app.component(breadcrumb.selector, breadcrumb)
