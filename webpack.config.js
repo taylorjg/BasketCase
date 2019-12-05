@@ -29,7 +29,7 @@ module.exports = {
   devServer: {
     contentBase: serverPublic,
     proxy: {
-      "/api": "http://localhost:3000"
+      '/api': 'http://localhost:3000'
     }
   }
 }

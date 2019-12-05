@@ -7,7 +7,7 @@ const search = (req, res) => {
     pageSize: Number(req.body.pageSize),
     currentPage: Number(req.body.currentPage),
     sortBy: Number(req.body.sortBy),
-    searchText: req.body.searchText || "",
+    searchText: req.body.searchText || '',
     filters: req.body.filters || []
   }
 

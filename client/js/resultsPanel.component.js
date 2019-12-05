@@ -4,7 +4,7 @@ import * as C from './constants'
 class Controller {
   constructor($rootScope, SearchService) {
     this.SearchService = SearchService
-    this.searchText = ""
+    this.searchText = ''
     this.sortOptions = C.SORT_OPTIONS
     this.sortBy = C.DEFAULT_SORT_BY
     this.products = []

@@ -5,13 +5,13 @@ class Controller {
   constructor($rootScope, SearchService) {
     this.$rootScope = $rootScope
     this.SearchService = SearchService
-    this.searchText = ""
+    this.searchText = ''
   }
 
   onSearch(searchText) {
     this.$rootScope.$broadcast(C.RESET_ALL_FACETS_EVENT, false)
     this.SearchService.search({ searchText, currentPage: 1 })
-    this.searchText = ""
+    this.searchText = ''
   }
 }
 
