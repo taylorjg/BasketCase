@@ -1,7 +1,7 @@
 const express = require('express')
 const searchServiceImpl = require('./elasticsearch/searchServiceImpl')
 
-const search = (req, res) => {
+const search = async (req, res) => {
 
   const searchOptions = {
     pageSize: Number(req.body.pageSize),
@@ -11,9 +11,12 @@ const search = (req, res) => {
     filters: req.body.filters || []
   }
 
-  searchServiceImpl.search(searchOptions)
-    .then(myResponse => sendJsonResponse(res, 200, myResponse))
-    .catch(err => sendStatusResponse(res, 500, err.message))
+  try {
+    const myResponse = await searchServiceImpl.search(searchOptions)
+    sendJsonResponse(res, 200, myResponse)
+  } catch (error) {
+    sendStatusResponse(res, 500, error.message)
+  }
 }
 
 const sendJsonResponse = (res, status, content) => res.status(status).json(content)

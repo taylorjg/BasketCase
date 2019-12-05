@@ -11,7 +11,7 @@ const esConfig = () => {
 
 const client = new es.Client(esConfig())
 
-const search = searchOptions => {
+const search = async searchOptions => {
 
   const esFilters = my2es.myFiltersToElasticsearchFilters(searchOptions.filters)
   const esSort = my2es.mySortByToElasticsearchSort(searchOptions.sortBy)
@@ -63,19 +63,17 @@ const search = searchOptions => {
     }
   }
 
-  return client.search(my2es.addAggregationsToRequest(esRequest, esFilters))
-    .then(esResponse => {
-      const myResponse = es2my.elasticsearchResponseToMyResponse(esResponse, searchOptions.filters)
-      return myResponse
-    })
-    .catch(err => {
-      if (err.displayName && err.statusCode) {
-        console.error(`[elasticsearch.searchServiceImpl#search]: ${err.displayName} (${err.statusCode}) ${err.message}`)
-      } else {
-        console.error(`[elasticsearch.searchServiceImpl#search]: ${err.message}`)
-      }
-      return err
-    })
+  try {
+    const esResponse = await client.search(my2es.addAggregationsToRequest(esRequest, esFilters))
+    return es2my.elasticsearchResponseToMyResponse(esResponse, searchOptions.filters)
+  } catch (error) {
+    if (error.displayName && error.statusCode) {
+      console.error(`[elasticsearch.searchServiceImpl#search]: ${error.displayName} (${error.statusCode}) ${error.message}`)
+    } else {
+      console.error(`[elasticsearch.searchServiceImpl#search]: ${error.message}`)
+    }
+    return error
+  }
 }
 
 module.exports = {

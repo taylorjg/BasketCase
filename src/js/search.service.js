@@ -8,7 +8,7 @@ class SearchService {
     this.lastSearchOptions = {}
   }
 
-  search(searchOptions) {
+  async search(searchOptions) {
     // TODO: protect against multiple in-flight searches (e.g. add a flag)
 
     searchOptions = searchOptions || {}
@@ -18,13 +18,14 @@ class SearchService {
       ? searchOptions.sortBy
       : C.DEFAULT_SORT_BY.value
     const url = `${C.SEARCH_SERVICE_URL}/search`
-    return this.$http
-      .post(url, searchOptions)
-      .then(response => this.$rootScope.$broadcast(C.SEARCH_RESULTS_EVENT, {
-        searchOptions,
-        response: response.data
-      }))
-      .then(() => this.lastSearchOptions = searchOptions)
+    const response = await this.$http.post(url, searchOptions)
+    const event = {
+      searchOptions,
+      response: response.data
+    }
+    this.$rootScope.$broadcast(C.SEARCH_RESULTS_EVENT, event)
+    this.$rootScope.$apply()
+    this.lastSearchOptions = searchOptions
   }
 
   changeSortBy(sortBy) {
