@@ -13,7 +13,7 @@ const downloadImages = async (products, folder, productToUrl) => {
   const axiosResponses = await Promise.all(axiosPromises)
   const fsPromises = axiosResponses.map((axiosResponse, index) => {
     const basename = path.basename(urls[index])
-    const imageFileName = path.resolve(__dirname, '..', 'client', 'assets', folder, basename)
+    const imageFileName = path.resolve(__dirname, '..', 'src', 'assets', folder, basename)
     console.log(`Saving ${imageFileName}`)
     return fs.writeFile(imageFileName, axiosResponse.data)
   })

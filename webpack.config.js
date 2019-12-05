@@ -8,20 +8,20 @@ const serverPublic = path.join(__dirname, 'server', 'public')
 module.exports = {
   // mode: 'production',
   mode: 'development',
-  entry: './client/js/app.js',
+  entry: './src/js/app.js',
   output: {
     path: serverPublic,
     filename: 'bundle.js',
   },
   plugins: [
     new CopyWebpackPlugin([
-      { context: './client', from: '*.html' },
-      { context: './client', from: '*.css' },
-      { context: './client', from: 'templates/**/*.html' },
-      { context: './client', from: 'assets/**/*.{png,gif,jpg}' }
+      { context: './src', from: '*.html' },
+      { context: './src', from: '*.css' },
+      { context: './src', from: 'templates/**/*.html' },
+      { context: './src', from: 'assets/**/*.{png,gif,jpg}' }
     ]),
     new HtmlWebpackPlugin({
-      template: './client/index.html',
+      template: './src/index.html',
       version: packageJson.version
     })
   ],
