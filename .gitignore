@@ -4,3 +4,4 @@ server/public/
 target/
 .idea/
 npm-debug.log
+.env

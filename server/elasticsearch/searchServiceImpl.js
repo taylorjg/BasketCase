@@ -3,9 +3,9 @@ const es2my = require('./es2my')
 const my2es = require('./my2es')
 
 const esConfig = () => {
-  const bonsai_url = process.env.BONSAI_URL
+  const BONSAI_URL = process.env.BONSAI_URL
   return {
-    host: bonsai_url || 'localhost:9200'
+    host: BONSAI_URL || 'localhost:9200'
   }
 }
 
