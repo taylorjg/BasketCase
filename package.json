@@ -1,6 +1,6 @@
 {
   "name": "basketcase",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Simple online store app as a vehicle for experimenting with Elasticsearch",
   "scripts": {
     "eslint": "eslint .",
