@@ -1,5 +1,3 @@
-[![CircleCI](https://circleci.com/gh/taylorjg/BasketCase.svg?style=svg)](https://circleci.com/gh/taylorjg/BasketCase)
-
 ## Description
 
 A little Angular 1.x app as a vehicle for grokking Elasticsearch. It supports the following functionality:
