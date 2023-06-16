@@ -6,7 +6,7 @@ module.exports = config => {
       'src/tests/**/*.tests.js'
     ],
     preprocessors: { ['src/tests/**/*.js']: ['webpack'] },
-    webpack: require('./webpack.config'),
+    webpack: { ...require('./webpack.config'), mode: "development" },
     webpackMiddleware: { stats: 'errors-only' },
     browsers: ['Chrome'],
     reporters: ['spec'],

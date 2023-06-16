@@ -2,13 +2,12 @@
   "name": "basketcase",
   "version": "0.0.23",
   "description": "Simple online store app as a vehicle for experimenting with Elasticsearch",
-  "main": "server/app.js",
   "scripts": {
     "eslint": "eslint .",
     "build": "webpack",
     "start": "serve build",
     "prestart": "npm run build",
-    "test": "mocha server/tests && karma start",
+    "test": "karma start",
     "deploy": "gh-pages -d build",
     "predeploy": "npm run build"
   },
