@@ -1,0 +1,156 @@
+body {
+    line-height: 16px;
+    padding-top: 20px;
+}
+
+.logo {
+    width: 103px;
+    height: 57px;
+}
+
+.facet-label {
+    display: inline;
+    line-height: 30px;
+    vertical-align: middle;
+}
+
+.facet-reset {
+    float: right;
+    line-height: 30px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.facet-reset-all {
+    display: block;
+    cursor: pointer;
+}
+
+.facet-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.facet-list label {
+    margin: 0;
+    font-weight: normal;
+    color: #337ab7;
+}
+
+.facet-list li {
+    margin: 0 0 0 5px;
+}
+
+.breadcrumb {
+    background-color: #fff;
+}
+
+.breadcrumb > li {
+    font-size: 1.1rem;
+    cursor: pointer;
+    background-color: #fff;
+    color: #ccc;
+}
+
+.breadcrumb > li + li:before {
+    content: "\00bb\00a0";
+}
+
+.results-count {
+    text-align: center;
+    font-style: italic;
+}
+
+.results-for-search {
+    text-align: center;
+    font-style: italic;
+}
+
+.productInfoArea {
+    width: 768px;
+    height: auto;
+    overflow: hidden;
+    margin: 35px 0 0;
+    position: relative;
+}
+
+.podLeftContent {
+    float: left;
+    width: 200px;
+    height: 100%;
+    position: relative;
+}
+
+.mainProdImage {
+    margin: 8px auto 0 auto;
+    padding: 0;
+    max-width: 200px;
+}
+
+.energyEfficiencyCard {
+    text-align: center;
+}
+
+.energyEfficiencySmall {
+    background: #9fc011;
+    width: 40px;
+    color: #fff;
+    text-align: center;
+    font-family: Arial,Helvetica,sans-serif;
+    font-weight: 700;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 8px 5px 8px 10px;
+}
+
+.energyTriangle {
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border-top: 16px solid transparent;
+    border-bottom: 16px solid transparent;
+    border-left: 16px solid transparent;
+    border-left-style: solid;
+    border-left-color: #9fc011;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.podCentreContent {
+    float: left;
+    width: 371px;
+    height: 100%;
+    position: relative;
+}
+
+.podRightContent {
+    float: right;
+    width: 168px;
+    height: 100%;
+    position: relative;
+}
+
+.brandLogo {
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 0;
+    font-size: 13px;
+    font-weight: bold;
+    width: 100px;
+    min-height: 40px !important;
+}
+
+.podTitle {
+    margin-top: 0;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 16px;
+}
+
+.price {
+    font-size: 1.3125rem;
+    font-weight: bold;
+    text-align: right;
+    margin-bottom: 5px;
+}

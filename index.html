@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="appBasketCase" ng-strict-di>
+
+<head>
+  <title>BasketCase - Buy all the things</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <span class="pull-right">version: <i>0.0.23</i></span>
+      </div>
+      <div class="col-md-12">
+        <hr />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <a href="/">
+          <img src="assets/logo.png" alt="logo" class="logo" title="BasketCase - Buy all the things">
+        </a>
+      </div>
+      <div class="col-md-9">
+        <search-panel></search-panel>
+      </div>
+      <div class="col-md-12">
+        <hr />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        <facets-panel></facets-panel>
+      </div>
+      <div class="col-md-10">
+        <!--<breadcrumbs-panel></breadcrumbs-panel>-->
+        <results-panel></results-panel>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript" src="bundle.js"></script></body>
+
+</html>
