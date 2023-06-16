@@ -6,14 +6,14 @@ class Controller {
   }
   $onInit() {
     const brand = this.product.Brand.toLowerCase()
-    const brandUrl = `url('/assets/brand-images/${brand}.png')`
+    const brandUrl = `url('assets/brand-images/${brand}.png')`
     this.background = {
       'background': brandUrl,
       'background-repeat': 'no-repeat',
       'background-size': 'contain',
     }
     const productImageBasename = path.basename(this.product.Image)
-    this.productImageUrl = `/assets/product-images/${productImageBasename}`
+    this.productImageUrl = `assets/product-images/${productImageBasename}`
   }
 }
 
