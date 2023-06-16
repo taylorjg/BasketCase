@@ -1,4 +1,4 @@
-export const SEARCH_SERVICE_URL = '/api'
+// export const SEARCH_SERVICE_URL = '/api'
 export const SEARCH_RESULTS_EVENT = 'SEARCH_RESULTS_EVENT'
 export const RESET_ALL_FACETS_EVENT = 'RESET_ALL_FACETS_EVENT'
 export const DEFAULT_PAGE_SIZE = 10

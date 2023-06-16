@@ -17,7 +17,8 @@ class SearchService {
     searchOptions.sortBy = Number.isInteger(searchOptions.sortBy)
       ? searchOptions.sortBy
       : C.DEFAULT_SORT_BY.value
-    const url = `${C.SEARCH_SERVICE_URL}/search`
+    // const url = `${C.SEARCH_SERVICE_URL}/search`
+    const url = `https://rqnfyvya7e.execute-api.us-east-1.amazonaws.com/api/search`
     const response = await this.$http.post(url, searchOptions)
     const event = {
       searchOptions,
