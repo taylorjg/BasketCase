@@ -6,9 +6,10 @@
   "scripts": {
     "eslint": "eslint .",
     "build": "webpack",
-    "start": "node server",
+    "start": "serve build",
+    "prestart": "npm run build",
     "test": "mocha server/tests && karma start",
-    "deploy": "gh-pages -d server/public",
+    "deploy": "gh-pages -d build",
     "predeploy": "npm run build"
   },
   "author": "Jonathan Taylor",

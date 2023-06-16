@@ -3,19 +3,17 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const packageJson = require('./package.json')
 
-const serverPublic = path.join(__dirname, 'server', 'public')
+const BUILD_FOLDER = path.resolve(__dirname, "build")
 
 module.exports = {
-  // mode: 'production',
-  mode: 'development',
+  mode: 'production',
   entry: './src/js/app.js',
   output: {
-    path: serverPublic,
+    path: BUILD_FOLDER,
     filename: 'bundle.js',
   },
   plugins: [
     new CopyWebpackPlugin([
-      { context: './src', from: '*.html' },
       { context: './src', from: '*.css' },
       { context: './src', from: 'templates/**/*.html' },
       { context: './src', from: 'assets/**/*.{png,gif,jpg}' }
@@ -27,9 +25,6 @@ module.exports = {
   ],
   devtool: 'source-map',
   devServer: {
-    contentBase: serverPublic,
-    // proxy: {
-    //   '/api': 'http://localhost:3000'
-    // }
+    contentBase: BUILD_FOLDER,
   }
 }
