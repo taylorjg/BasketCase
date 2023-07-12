@@ -2,6 +2,10 @@
 <a class="facet-reset" ng-show="vm.anythingSelected()" ng-click="vm.onReset()">Reset</a>
 <ul class="facet-list">
     <li ng-repeat="value in vm.facet.facetValues">
-        <facet-value facet-id="vm.facet.facetId" value="value" is-range="vm.facet.isRange" on-change="vm.onChange(value)"></facet-value>
+        <facet-value
+            facet-name="vm.facet.name"
+            value="value"
+            is-range="vm.facet.isRange"
+            on-change="vm.onChange(value)" />
     </li>
 </ul>

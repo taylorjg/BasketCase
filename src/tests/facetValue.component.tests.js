@@ -3,12 +3,11 @@ import { expect } from 'chai'
 const angular = window.angular
 
 const facet = {
-  facetId: 2,
+  name: 'brand',
   displayName: 'Brand',
   isRange: false,
   facetValues: [
     {
-      index: 0,
       displayName: 'Beko',
       key: 'Beko',
       count: 2,
@@ -38,7 +37,7 @@ describe('facetValue.component', () => {
 
   it('getLabel', () => {
     const bindings = {
-      facetId: facet.facetId,
+      facetName: facet.name,
       value: facet.facetValues[0],
       isRange: facet.isRange,
       onChange: angular.noop

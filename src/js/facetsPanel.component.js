@@ -54,8 +54,7 @@ class Controller {
   termsFilter(facet, selectedValues) {
     return selectedValues.length
       ? {
-        type: 'terms',
-        facetId: facet.facetId,
+        name: facet.name,
         keys: selectedValues.map(v => v.key)
       }
       : null
@@ -65,11 +64,8 @@ class Controller {
     const selectedValue = selectedValues.length === 1 ? selectedValues[0] : null
     return selectedValue
       ? {
-        type: 'range',
-        facetId: facet.facetId,
+        name: facet.name,
         keys: [selectedValue.key],
-        from: selectedValue.from,
-        to: selectedValue.to
       }
       : null
   }

@@ -3,26 +3,23 @@ import { expect } from 'chai'
 const angular = window.angular
 
 const termsFacet = {
-  facetId: 2,
+  name: 'brand',
   displayName: 'Brand',
   isRange: false,
   facetValues: [
     {
-      index: 0,
       displayName: 'Beko',
       key: 'Beko',
       count: 2,
       selected: false
     },
     {
-      index: 1,
       displayName: 'Hotpoint',
       key: 'Hotpoint',
       count: 7,
       selected: false
     },
     {
-      index: 2,
       displayName: 'Indesit',
       key: 'Indesit',
       count: 5,
@@ -32,32 +29,25 @@ const termsFacet = {
 }
 
 const rangeFacet = {
-  facetId: 4,
+  name: 'price',
   displayName: 'Price',
   isRange: true,
   facetValues: [
     {
-      index: 0,
       displayName: '&pound;200 or less',
-      key: '*-200.0',
-      to: 200,
+      key: 'undefined-200',
       count: 2,
       selected: false
     },
     {
-      index: 1,
       displayName: '&pound;200 - &pound;250',
-      key: '200.0-250.0',
-      from: 200,
-      to: 250,
+      key: '200-250',
       count: 7,
       selected: false
     },
     {
-      index: 2,
       displayName: '&pound;250 or more',
-      key: '250.0-*',
-      from: 250,
+      key: '250-undefined',
       count: 5,
       selected: false
     }

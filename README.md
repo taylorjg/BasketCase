@@ -22,15 +22,11 @@ end point, `/api/search`.
 ```json
 {
     "filters": [{
-        "type": "terms",
-        "facetId": 2,
+        "name": "brand",
         "keys": ["Beko", "Hotpoint"]
     }, {
-        "type": "range",
-        "facetId": 4,
-        "keys": ["250.0-300.0"],
-        "from": 250,
-        "to": 300
+        "name": "price",
+        "keys": ["250-300"],
     }],
     "currentPage": 1,
     "pageSize": 10,
@@ -69,32 +65,30 @@ end point, `/api/search`.
         ]
     },
     "facets": [{
-        "facetId": 1,
         "isRange": false,
+        "name": "fitType",
         "displayName": "Fit Type",
         "facetValues": [{
-            "index": 0,
             "displayName": "Free Standing",
             "key": "Free Standing",
-            "count": 6
+            "count": 6,
+            "selected": false
         }, {
-            "index": 1,
             "displayName": "Built In",
             "key": "Built In",
-            "count": 1
+            "count": 1,
+            "selected": false
         }]
     }, {
-        "facetId": 2,
         "isRange": false,
+        "name": "brand",
         "displayName": "Brand",
         "facetValues": [{
-            "index": 0,
             "displayName": "Beko",
             "key": "Beko",
             "count": 6,
             "selected": true
         }, {
-            "index": 1,
             "displayName": "Hoover",
             "key": "Hoover",
             "count": 3,
@@ -103,44 +97,39 @@ end point, `/api/search`.
         ...
         ]
     }, {
-        "facetId": 3,
         "isRange": false,
+        "name": "colour",
         "displayName": "Colour",
         "facetValues": [{
-            "index": 0,
             "displayName": "Black",
             "key": "Black",
-            "count": 3
+            "count": 3,
+            "selected": false
         }, {
-            "index": 1,
             "displayName": "White",
             "key": "White",
-            "count": 3
+            "count": 3,
+            "selected": false
         }, {
-            "index": 2,
             "displayName": "Silver",
             "key": "Silver",
-            "count": 1
+            "count": 1,
+            "selected": false
         }]
     }, {
-        "facetId": 4,
         "isRange": true,
+        "name": "price",
         "displayName": "Price",
         "facetValues": [{
-            "index": 0,
             "displayName": "&pound;200 or less",
-            "key": "*-200.0",
+            "key": "undefined-200",
             "count": 2,
             "selected": false,
-            "to": 200
         }, {
-            "index": 1,
             "displayName": "&pound;200 - &pound;250",
-            "key": "200.0-250.0",
+            "key": "200-250",
             "count": 7,
             "selected": false,
-            "from": 200,
-            "to": 250
         },
         ...
         ]
