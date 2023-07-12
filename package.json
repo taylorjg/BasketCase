@@ -3,13 +3,14 @@
   "version": "0.0.25",
   "description": "Simple online store app as a vehicle for experimenting with Elasticsearch",
   "scripts": {
-    "eslint": "eslint .",
+    "lint": "eslint .",
     "build": "webpack",
     "start": "serve build",
     "prestart": "npm run build",
     "test": "karma start",
     "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "open": "open https://taylorjg.github.io/BasketCase"
   },
   "author": "Jonathan Taylor",
   "license": "MIT",
