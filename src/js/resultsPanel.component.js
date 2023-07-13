@@ -18,7 +18,7 @@ class Controller {
   }
 
   onSearchResultsEvent(_, { searchOptions, response }) {
-    this.total = response.results.total.value || response.results.total
+    this.total = response.results.total
     this.sortBy = this.lookupSortOption(searchOptions.sortBy)
     this.searchText = searchOptions.searchText
     this.pageSize = searchOptions.pageSize
