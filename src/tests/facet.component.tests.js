@@ -5,7 +5,7 @@ const angular = window.angular
 const termsFacet = {
   name: 'brand',
   displayName: 'Brand',
-  isRange: false,
+  type: 'multi',
   facetValues: [
     {
       displayName: 'Beko',
@@ -31,7 +31,7 @@ const termsFacet = {
 const rangeFacet = {
   name: 'price',
   displayName: 'Price',
-  isRange: true,
+  type: 'single',
   facetValues: [
     {
       displayName: '&pound;200 or less',

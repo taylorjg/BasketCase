@@ -1,6 +1,6 @@
 <div>
-    <ng-switch on="vm.isRange">
-        <input ng-switch-when="true"
+    <ng-switch on="vm.type">
+        <input ng-switch-when="single"
             type="radio"
             id="{{ vm.facetName }}-{{ vm.value.key }}"
             name="{{ vm.facetName }}"

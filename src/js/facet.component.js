@@ -10,7 +10,7 @@ class Controller {
   }
 
   onChange(value) {
-    if (this.facet.isRange) {
+    if (this.facet.type === 'single') {
       this.facet.facetValues.forEach(v => v.selected = v === value)
     }
     this.onFacetSelectionChanged()

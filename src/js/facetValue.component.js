@@ -17,8 +17,8 @@ const facetValue = {
   templateUrl: 'templates/facetValue.component.html',
   bindings: {
     facetName: '<',
+    type: '<',
     value: '<',
-    isRange: '<',
     onChange: '&'
   },
   controller: Controller,

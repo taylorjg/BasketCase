@@ -65,9 +65,9 @@ end point, `/api/search`.
         ]
     },
     "facets": [{
-        "isRange": false,
         "name": "fitType",
         "displayName": "Fit Type",
+        "type": "multi",
         "facetValues": [{
             "displayName": "Free Standing",
             "key": "Free Standing",
@@ -80,9 +80,9 @@ end point, `/api/search`.
             "selected": false
         }]
     }, {
-        "isRange": false,
         "name": "brand",
         "displayName": "Brand",
+        "type": "multi",
         "facetValues": [{
             "displayName": "Beko",
             "key": "Beko",
@@ -97,9 +97,9 @@ end point, `/api/search`.
         ...
         ]
     }, {
-        "isRange": false,
         "name": "colour",
         "displayName": "Colour",
+        "type": "multi",
         "facetValues": [{
             "displayName": "Black",
             "key": "Black",
@@ -117,9 +117,9 @@ end point, `/api/search`.
             "selected": false
         }]
     }, {
-        "isRange": true,
         "name": "price",
         "displayName": "Price",
+        "type": "single",
         "facetValues": [{
             "displayName": "&pound;200 or less",
             "key": "undefined-200",

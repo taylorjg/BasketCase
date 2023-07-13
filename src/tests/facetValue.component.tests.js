@@ -5,7 +5,7 @@ const angular = window.angular
 const facet = {
   name: 'brand',
   displayName: 'Brand',
-  isRange: false,
+  type: 'multi',
   facetValues: [
     {
       displayName: 'Beko',
@@ -38,8 +38,8 @@ describe('facetValue.component', () => {
   it('getLabel', () => {
     const bindings = {
       facetName: facet.name,
+      type: facet.type,
       value: facet.facetValues[0],
-      isRange: facet.isRange,
       onChange: angular.noop
     }
     const controller = $componentController('facetValue', {}, bindings)

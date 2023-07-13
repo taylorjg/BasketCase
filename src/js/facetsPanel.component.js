@@ -46,26 +46,26 @@ class Controller {
 
   buildFilter(facet) {
     const selectedValues = facet.facetValues.filter(v => v.selected)
-    return facet.isRange
-      ? this.rangeFilter(facet, selectedValues)
-      : this.termsFilter(facet, selectedValues)
+    return facet.type === 'single'
+      ? this.singleFilter(facet, selectedValues)
+      : this.multiFilter(facet, selectedValues)
   }
 
-  termsFilter(facet, selectedValues) {
-    return selectedValues.length
-      ? {
-        name: facet.name,
-        keys: selectedValues.map(v => v.key)
-      }
-      : null
-  }
-
-  rangeFilter(facet, selectedValues) {
+  singleFilter(facet, selectedValues) {
     const selectedValue = selectedValues.length === 1 ? selectedValues[0] : null
     return selectedValue
       ? {
         name: facet.name,
         keys: [selectedValue.key],
+      }
+      : null
+  }
+
+  multiFilter(facet, selectedValues) {
+    return selectedValues.length > 0
+      ? {
+        name: facet.name,
+        keys: selectedValues.map(v => v.key)
       }
       : null
   }
