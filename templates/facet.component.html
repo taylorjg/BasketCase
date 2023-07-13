@@ -4,8 +4,8 @@
     <li ng-repeat="value in vm.facet.facetValues">
         <facet-value
             facet-name="vm.facet.name"
+            type="vm.facet.type"
             value="value"
-            is-range="vm.facet.isRange"
             on-change="vm.onChange(value)" />
     </li>
 </ul>
